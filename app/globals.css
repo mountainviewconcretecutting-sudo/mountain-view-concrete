@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-fog text-charcoal font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display uppercase tracking-wide;
+  }
+  :focus-visible {
+    outline: 3px solid #E85D04;
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * SIGNATURE MOTIF — the "cut line".
+   * Every major section boundary on the site is a diagonal blade-cut rather
+   * than a straight edge, echoing the company's actual trade (concrete
+   * sawing). Applied via a clip-path on the section that sits BELOW the
+   * divider, so the section above appears to have been sliced into it.
+   */
+  .cut-below {
+    clip-path: polygon(0 3.2vw, 100% 0, 100% 100%, 0 100%);
+  }
+  .cut-above {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.2vw));
+  }
+
+  /* Thin animated blade line used once, in the hero, on load */
+  .blade-line {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(232, 93, 4, 0.9) 45%,
+      rgba(232, 93, 4, 0.9) 55%,
+      transparent 100%
+    );
+    width: 40%;
+    filter: blur(0.5px);
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-orange px-6 py-3.5
+           font-display text-sm uppercase tracking-wider text-white shadow-sm transition-colors
+           hover:bg-orange-hover focus-visible:outline-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-charcoal px-6 py-3
+           font-display text-sm uppercase tracking-wider text-charcoal transition-colors
+           hover:bg-charcoal hover:text-white;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-orange;
+  }
+}
