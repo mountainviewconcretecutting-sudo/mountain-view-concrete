@@ -89,6 +89,24 @@ before update on projects
 for each row execute function set_updated_at();
 
 -- ---------------------------------------------------------------------------
+-- Helper Function: is_admin()
+-- Checks if the calling user exists in `admin_profiles`.
+-- Uses SECURITY DEFINER to bypass RLS recursion on `admin_profiles`.
+-- ---------------------------------------------------------------------------
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from admin_profiles
+    where id = auth.uid()
+  );
+$$;
+
+-- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
 alter table admin_profiles enable row level security;
@@ -103,8 +121,8 @@ create policy "projects are publicly readable"
 -- Only authenticated admins can write projects.
 create policy "admins can manage projects"
   on projects for all
-  using (exists (select 1 from admin_profiles where id = auth.uid()))
-  with check (exists (select 1 from admin_profiles where id = auth.uid()));
+  using (is_admin())
+  with check (is_admin());
 
 -- Anyone can INSERT a lead (the public quote form), but nobody can read/list
 -- leads from the client — only the server (service-role key) or an admin can.
@@ -114,17 +132,17 @@ create policy "anyone can submit a lead"
 
 create policy "admins can view leads"
   on leads for select
-  using (exists (select 1 from admin_profiles where id = auth.uid()));
+  using (is_admin());
 
 create policy "admins can update leads"
   on leads for update
-  using (exists (select 1 from admin_profiles where id = auth.uid()))
-  with check (exists (select 1 from admin_profiles where id = auth.uid()));
+  using (is_admin())
+  with check (is_admin());
 
 -- admin_profiles: admins can see the staff list; nobody can self-promote.
 create policy "admins can view admin list"
   on admin_profiles for select
-  using (exists (select 1 from admin_profiles where id = auth.uid()));
+  using (is_admin());
 
 -- ---------------------------------------------------------------------------
 -- site_content — Editable text content sections across the site
@@ -143,8 +161,8 @@ create policy "site_content is publicly readable"
 
 create policy "admins can update site_content"
   on site_content for all
-  using (exists (select 1 from admin_profiles where id = auth.uid()))
-  with check (exists (select 1 from admin_profiles where id = auth.uid()));
+  using (is_admin())
+  with check (is_admin());
 
 -- ---------------------------------------------------------------------------
 -- Seed data: starting service catalogue projects & site content
