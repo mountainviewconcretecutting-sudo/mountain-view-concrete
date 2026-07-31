@@ -61,9 +61,31 @@ export interface QuoteFormValues {
   companyWebsite: string;
 }
 
+export type TestimonialStatus = "pending" | "approved" | "rejected";
+
+export interface Testimonial {
+  id: string;
+  author_name: string;
+  rating: number; // 1-5
+  message: string;
+  project_id: string | null;
+  status: TestimonialStatus;
+  created_at: string;
+  projects?: { title: string } | null;
+}
+
+export interface TestimonialFormValues {
+  authorName: string;
+  rating: number;
+  message: string;
+  projectId?: string | null;
+  // Honeypot field — must stay empty.
+  companyWebsite?: string;
+}
+
 export interface ActionResult<T = undefined> {
   success: boolean;
   message: string;
   data?: T;
-  fieldErrors?: Partial<Record<keyof QuoteFormValues, string>>;
+  fieldErrors?: Record<string, string>;
 }
