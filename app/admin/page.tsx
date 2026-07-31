@@ -3,17 +3,19 @@ import { adminLogout } from "@/lib/actions/admin";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import TestimonialsTable from "@/components/admin/TestimonialsTable";
-import type { Lead, Project, Testimonial } from "@/lib/types";
+import PostsManager from "@/components/admin/PostsManager";
+import type { Lead, Project, Testimonial, Post } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: leads }, { data: projects }, { data: testimonials }] = await Promise.all([
+  const [{ data: leads }, { data: projects }, { data: testimonials }, { data: posts }] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }),
     supabase.from("projects").select("*").order("sort_order", { ascending: true }),
     supabase.from("testimonials").select("*, projects(title)").order("created_at", { ascending: false }),
+    supabase.from("posts").select("*").order("created_at", { ascending: false }),
   ]);
 
   return (
@@ -48,7 +50,15 @@ export default async function AdminDashboardPage() {
           </h2>
           <ProjectsManager projects={(projects as Project[]) ?? []} />
         </section>
+
+        <section className="mt-14">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Announcements &amp; News Posts
+          </h2>
+          <PostsManager posts={(posts as Post[]) ?? []} />
+        </section>
       </div>
     </div>
   );
 }
+

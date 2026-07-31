@@ -9,8 +9,10 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/projects", label: "Projects" },
+  { href: "/updates", label: "Updates" },
   { href: "/contact", label: "Contact" },
 ];
+
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

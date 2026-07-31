@@ -3,7 +3,7 @@
 > **Project Architecture & Context Document**  
 > *Last Updated: July 2026*
 
----
+--- AFTER EVERY MAJOR CHANGE IN THE CODEBASE ADD THE CHANGES TO THIS FILE
 
 ## 1. Project Overview & Business Context
 
@@ -18,7 +18,7 @@ The primary objective of the site is to drive qualified quote requests, showcase
 - **Inline Site Content Editing System**: Allows authenticated staff to edit core site text (e.g. hero tagline, subtext, company story, mission statement) directly on live public pages using inline rich-text controls without navigating to a separate CMS dashboard.
 - **Quote Lead Capture**: Interactive modal and dedicated contact section with bot-honeypot protection, Zod input validation, database storage, and automated transactional email alerts via Resend.
 - **Testimonial Submission & Moderation**: Public-facing customer feedback form with admin approval workflow before reviews publish to the live homepage/projects pages.
-- **Admin CMS Dashboard (`/admin`)**: Protected management portal for reviewing quote leads, moderating testimonials, and performing full CRUD operations on featured project portfolios.
+- **Posts / Announcements CMS**: Full management of company news, announcements, and updates (`posts` table), featuring slug generation, draft/publish status toggles, ISR public listing at `/updates`, and dynamic detail pages at `/updates/[slug]`.
 
 ---
 
@@ -66,12 +66,15 @@ mountain-view-concrete-cutting/
     │   │   └── page.tsx
     │   ├── projects/                   # Portfolio showcase filterable by category (residential, commercial, industrial)
     │   │   └── page.tsx
+    │   ├── updates/                    # Company Announcements & News Posts (ISR revalidate = 60)
+    │   │   ├── page.tsx                # Listing page (/updates)
+    │   │   └── [slug]/page.tsx         # Post detail page (/updates/[slug])
     │   ├── contact/                    # Contact information & inline quote submission form
     │   │   └── page.tsx
     │   └── admin/                      # Protected Admin CMS Area
     │       ├── login/                  # Supabase Auth email/password login portal
     │       │   └── page.tsx
-    │       └── page.tsx                # Admin Dashboard (Leads Table, Testimonial Moderation, Projects Manager)
+    │       └── page.tsx                # Admin Dashboard (Leads, Testimonials, Projects, Posts)
     │
     ├── components/                     # Reusable React UI Components
     │   ├── Header.tsx                  # Desktop/mobile navigation & request quote button
@@ -93,6 +96,7 @@ mountain-view-concrete-cutting/
     │   ├── admin/                      # Admin dashboard client tables and managers
     │   │   ├── LeadsTable.tsx
     │   │   ├── ProjectsManager.tsx
+    │   │   ├── PostsManager.tsx
     │   │   └── TestimonialsTable.tsx
     │   ├── contact/
     │   │   └── ContactFormSection.tsx
@@ -100,15 +104,18 @@ mountain-view-concrete-cutting/
     │       └── ProjectsGrid.tsx
     │
     ├── lib/                            # Application Logic, Database Clients, & Server Actions
-    │   ├── types.ts                    # Shared domain TypeScript types (Lead, Project, Testimonial, SiteContent)
+    │   ├── types.ts                    # Shared domain TypeScript types (Lead, Project, Testimonial, Post, SiteContent)
+    │   ├── utils/
+    │   │   └── slugify.ts              # Slugify utility for posts/announcements
     │   ├── supabase/
     │   │   ├── server.ts               # SSR Supabase client (cookie-aware) & service-role client
     │   │   └── client.ts               # Browser Supabase client
     │   └── actions/                    # Server Actions (Mutations & Privileged Queries)
-    │       ├── admin.ts                # Login, logout, lead status updates, testimonial moderation, project CRUD
+    │       ├── admin.ts                # Login, logout, lead status, testimonial moderation, project CRUD, post CRUD (upsertPost, deletePost)
     │       ├── siteContent.ts          # getIsAdmin, getSiteContent, getSiteContents, updateSiteContent
     │       ├── submitQuote.ts          # Public lead form handler with Zod validation & Resend email trigger
     │       └── submitTestimonial.ts    # Public testimonial submission handler
+
     │
     ├── middleware.ts                   # Auth middleware protecting /admin/* and handling login redirects
     ├── scripts/
@@ -235,3 +242,11 @@ LEAD_NOTIFICATION_EMAIL=crafuse0@gmail.com
    ```bash
    npm run build
    ```
+
+---
+
+## 7. AI Maintenance & Update Mandate
+
+- **Living Document Policy**: `PROJECT_CONTEXT.md` is a living document and MUST be kept up to date.
+- **Feature Completion Checklist**: Whenever a new feature, route, component, server action, or database table is added, modified, or removed, the AI MUST update the corresponding sections of `PROJECT_CONTEXT.md` in the same turn/commit.
+- **Verification**: After completing any task, check if the architecture, dependencies, or key features changed. If yes, automatically update this file.

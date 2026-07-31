@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { ActionResult, LeadStatus, Project } from "@/lib/types";
+import type { ActionResult, LeadStatus, Project, Post } from "@/lib/types";
 
 export async function adminLogin(
   _prev: ActionResult | undefined,
@@ -104,3 +104,54 @@ export async function deleteProject(projectId: string) {
   revalidatePath("/projects");
   revalidatePath("/");
 }
+
+const postSchema = z.object({
+  title: z.string().min(2, "Title is required").max(200),
+  slug: z.string().min(2, "Slug is required").max(200),
+  body: z.string().min(5, "Body content is required"),
+  cover_image_url: z.string().url().optional().nullable().or(z.literal("")),
+  is_published: z.boolean(),
+});
+
+export async function upsertPost(
+  input: Partial<Post> & { id?: string }
+): Promise<ActionResult> {
+  const parsed = postSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, message: "Please check the post fields and try again." };
+  }
+
+  const payload = {
+    title: parsed.data.title,
+    slug: parsed.data.slug,
+    body: parsed.data.body,
+    cover_image_url: parsed.data.cover_image_url || null,
+    is_published: parsed.data.is_published,
+    updated_at: new Date().toISOString(),
+  };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = input.id
+    ? await supabase.from("posts").update(payload).eq("id", input.id)
+    : await supabase.from("posts").insert(payload);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+  if (parsed.data.slug) {
+    revalidatePath(`/updates/${parsed.data.slug}`);
+  }
+  return { success: true, message: "Post saved." };
+}
+
+export async function deletePost(postId: string) {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+}
+

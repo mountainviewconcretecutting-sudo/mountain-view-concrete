@@ -89,3 +89,15 @@ export interface ActionResult<T = undefined> {
   data?: T;
   fieldErrors?: Record<string, string>;
 }
+
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  body: string;
+  cover_image_url: string | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
