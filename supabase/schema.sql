@@ -21,6 +21,8 @@ create type project_category as enum ('residential', 'commercial', 'industrial')
 
 create type lead_status as enum ('new', 'contacted', 'quoted', 'won', 'lost');
 
+create type testimonial_status as enum ('pending', 'approved', 'rejected');
+
 -- ---------------------------------------------------------------------------
 -- admin_profiles
 -- One row per Supabase Auth user who is allowed into /admin. Auth itself is
@@ -161,6 +163,39 @@ create policy "site_content is publicly readable"
 
 create policy "admins can update site_content"
   on site_content for all
+  using (is_admin())
+  with check (is_admin());
+
+-- ---------------------------------------------------------------------------
+-- testimonials — Customer reviews and testimonials (public submit, admin moderate)
+-- ---------------------------------------------------------------------------
+create table if not exists testimonials (
+  id uuid primary key default gen_random_uuid(),
+  author_name text not null,
+  rating smallint not null check (rating between 1 and 5),
+  message text not null,
+  project_id uuid references projects (id) on delete set null,
+  status testimonial_status not null default 'pending',
+  created_at timestamptz not null default now()
+);
+
+create index if not exists testimonials_status_idx on testimonials (status, created_at desc);
+
+alter table testimonials enable row level security;
+
+-- Anyone can submit a pending testimonial
+create policy "anyone can submit a testimonial"
+  on testimonials for insert
+  with check (status = 'pending');
+
+-- Public can read approved testimonials
+create policy "approved testimonials are publicly readable"
+  on testimonials for select
+  using (status = 'approved');
+
+-- Admins can manage testimonials
+create policy "admins can manage testimonials"
+  on testimonials for all
   using (is_admin())
   with check (is_admin());
 

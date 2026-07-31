@@ -40,6 +40,21 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
   revalidatePath("/admin");
 }
 
+export async function updateTestimonialStatus(
+  testimonialId: string,
+  status: "pending" | "approved" | "rejected"
+) {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("testimonials")
+    .update({ status })
+    .eq("id", testimonialId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/projects");
+  revalidatePath("/");
+}
+
 const projectSchema = z.object({
   title: z.string().min(2).max(150),
   category: z.enum(["residential", "commercial", "industrial"]),

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
-import type { Project } from "@/lib/types";
+import TestimonialSectionWithForm from "@/components/projects/TestimonialSectionWithForm";
+import type { Project, Testimonial } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -28,8 +29,30 @@ async function getAllProjects(): Promise<Project[]> {
   }
 }
 
+async function getApprovedTestimonials(): Promise<Testimonial[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*, projects(title)")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("Failed to load testimonials:", error.message);
+      return [];
+    }
+    return (data as Testimonial[]) ?? [];
+  } catch (err) {
+    console.error("Supabase client unavailable:", err);
+    return [];
+  }
+}
+
 export default async function ProjectsPage() {
-  const projects = await getAllProjects();
+  const [projects, testimonials] = await Promise.all([
+    getAllProjects(),
+    getApprovedTestimonials(),
+  ]);
 
   return (
     <>
@@ -45,6 +68,8 @@ export default async function ProjectsPage() {
           <ProjectsGrid projects={projects} />
         </div>
       </section>
+
+      <TestimonialSectionWithForm projects={projects} testimonials={testimonials} />
     </>
   );
 }
