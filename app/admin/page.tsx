@@ -4,18 +4,26 @@ import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import TestimonialsTable from "@/components/admin/TestimonialsTable";
 import PostsManager from "@/components/admin/PostsManager";
-import type { Lead, Project, Testimonial, Post } from "@/lib/types";
+import CommentsTable from "@/components/admin/CommentsTable";
+import type { Lead, Project, Testimonial, Post, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: leads }, { data: projects }, { data: testimonials }, { data: posts }] = await Promise.all([
+  const [
+    { data: leads },
+    { data: projects },
+    { data: testimonials },
+    { data: posts },
+    { data: comments },
+  ] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }),
     supabase.from("projects").select("*").order("sort_order", { ascending: true }),
     supabase.from("testimonials").select("*, projects(title)").order("created_at", { ascending: false }),
     supabase.from("posts").select("*").order("created_at", { ascending: false }),
+    supabase.from("comments").select("*, posts(title, slug), projects(title)").order("created_at", { ascending: false }),
   ]);
 
   return (
@@ -35,6 +43,13 @@ export default async function AdminDashboardPage() {
             Quote Requests
           </h2>
           <LeadsTable leads={(leads as Lead[]) ?? []} />
+        </section>
+
+        <section className="mt-14">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Comments Moderation (Posts &amp; Projects)
+          </h2>
+          <CommentsTable comments={(comments as Comment[]) ?? []} />
         </section>
 
         <section className="mt-14">

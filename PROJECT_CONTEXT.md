@@ -1,7 +1,7 @@
 # PROJECT_CONTEXT.md — Mountain View Concrete Cutting Inc.
 
 > **Project Architecture & Context Document**  
-> *Last Updated: August 3 2026*
+> *Last Updated: August 4 2026*
 
 --- AFTER EVERY MAJOR CHANGE IN THE CODEBASE ADD THE CHANGES TO THIS FILE
 
@@ -18,6 +18,7 @@ The primary objective of the site is to drive qualified quote requests, showcase
 - **Inline Site Content Editing System**: Allows authenticated staff to edit core site text (e.g. hero tagline, subtext, company story, mission statement) directly on live public pages using inline rich-text controls without navigating to a separate CMS dashboard.
 - **Quote Lead Capture**: Interactive modal and dedicated contact section with bot-honeypot protection, Zod input validation, database storage, and automated transactional email alerts via Resend.
 - **Testimonial Submission & Moderation**: Public-facing customer feedback form with admin approval workflow before reviews publish to the live homepage/projects pages.
+- **Comments & Unified Moderation System**: Interactive comment forms on post detail pages (`/updates/[slug]`) and project cards (`/projects`), featuring bot honeypot protection, Zod validation, pending review workflow, and a unified admin moderation table (`CommentsTable.tsx`) for approving, rejecting, or deleting comments across both sources.
 - **Posts / Announcements CMS**: Full CRUD management of company news, announcements, and updates via the admin dashboard (`PostsManager.tsx`). Features include:
   - `posts` database table with `title`, `slug`, `body`, `cover_image_url`, `is_published`, `created_at`, `updated_at` columns.
   - Auto-generated URL slugs via `lib/utils/slugify.ts`.
@@ -183,7 +184,7 @@ The application features a zero-friction, on-page content editing workflow built
 Full CMS feature for managing company news, announcements, and project highlights.
 
 #### Database (`posts` table)
-> **Note**: The `posts` table DDL was applied directly in the Supabase SQL Editor and is **not yet** included in `supabase/schema.sql`. The expected schema is:
+The `posts` table DDL, RLS policies, and `updated_at` trigger are included in `supabase/schema.sql` (added after the `testimonials` block). The schema is:
 ```sql
 create table if not exists posts (
   id uuid primary key default gen_random_uuid(),
@@ -198,6 +199,7 @@ create table if not exists posts (
 
 alter table posts enable row level security;
 -- RLS: public can read published posts, admins can manage all posts
+-- Trigger: posts_set_updated_at reuses the shared set_updated_at() function
 ```
 
 #### TypeScript Type (`lib/types.ts`)
@@ -215,6 +217,7 @@ export interface Post {
 ```
 
 #### Server Actions (`lib/actions/admin.ts`)
+- All six mutation functions (`updateLeadStatus`, `updateTestimonialStatus`, `upsertProject`, `deleteProject`, `upsertPost`, `deletePost`) begin with an explicit `getIsAdmin()` check (imported from `lib/actions/siteContent.ts`) before any validation or DB call. Functions returning `ActionResult` return `{ success: false, message: "Unauthorized: Admin access required." }`; void-returning functions throw `Error("Unauthorized: Admin access required.")`. This provides defense-in-depth alongside Postgres RLS.
 - **`upsertPost(input)`**: Validates via a Zod `postSchema` (title 2-200 chars, slug 2-200 chars, body min 5, optional URL for cover image, boolean `is_published`). Inserts or updates the `posts` table. Revalidates `/admin`, `/updates`, and `/updates/[slug]`.
 - **`deletePost(postId)`**: Deletes a post by UUID. Revalidates `/admin` and `/updates`.
 
@@ -252,7 +255,7 @@ Used client-side in `PostsManager.tsx` via the "Auto-generate" button (Sparkles 
   - `leads`: Publicly insertable (`insert true`), read/update restricted exclusively to admins (`is_admin()`). Browser clients cannot read other leads.
   - `site_content`: Publicly readable (`select true`), updateable only by admins (`is_admin()`).
   - `testimonials`: Anyone can submit with status `pending`. Only `approved` rows are publicly readable. Admins can read, approve, or reject.
-  - `posts`: Published posts publicly readable. Admins can manage all posts (RLS policies applied directly in Supabase).
+  - `posts`: Published posts publicly readable (`is_published = true`). Admins can manage all posts. RLS policies codified in `schema.sql`.
 
 ---
 
@@ -308,8 +311,7 @@ LEAD_NOTIFICATION_EMAIL=crafuse0@gmail.com
    npm install
    ```
 2. **Database Initialization**:
-   - Execute the SQL script in `supabase/schema.sql` inside your Supabase project's SQL Editor. This sets up tables (`projects`, `leads`, `admin_profiles`, `site_content`, `testimonials`), RLS policies, enums, triggers, and seed data.
-   - **Posts table**: The `posts` table DDL is not yet in `schema.sql`. Either run the DDL shown in Section 4C manually, or add it to `schema.sql` before running.
+   - Execute the SQL script in `supabase/schema.sql` inside your Supabase project's SQL Editor. This sets up tables (`projects`, `leads`, `admin_profiles`, `site_content`, `testimonials`, `posts`), RLS policies, enums, triggers, and seed data.
 3. **Provision Initial Admin Account**:
    ```bash
    npm run create-admin admin@mountainviewconcrete.ca MySecurePassword123! "Admin User"
@@ -330,9 +332,12 @@ LEAD_NOTIFICATION_EMAIL=crafuse0@gmail.com
 
 ## 7. Known Issues & Technical Debt
 
-1. **`posts` table DDL not in `schema.sql`**: The `posts` table was created directly in the Supabase SQL Editor. It should be added to `supabase/schema.sql` for reproducibility and version control.
-2. **Posts RLS policies applied directly**: The RLS policies for the `posts` table were set up in Supabase Dashboard and are not codified in `schema.sql`.
-3. **No `updated_at` trigger on `posts`**: Unlike `projects`, the `posts` table does not have a `set_updated_at()` trigger. The `updated_at` field is set manually in the `upsertPost` server action via `new Date().toISOString()`.
+1. ~~**`posts` table DDL not in `schema.sql`**~~ — ✅ Resolved (August 4 2026): `posts` table, index, RLS policies, and `updated_at` trigger added to `supabase/schema.sql`.
+2. ~~**Posts RLS policies applied directly**~~ — ✅ Resolved (August 4 2026): RLS policies for `posts` now codified in `schema.sql`.
+3. ~~**No `updated_at` trigger on `posts`**~~ — ✅ Resolved (August 4 2026): `posts_set_updated_at` trigger added to `schema.sql`, reusing the shared `set_updated_at()` function. The manual `updated_at` assignment in `upsertPost` is retained as a harmless redundancy.
+4. ~~**Inconsistent admin auth checks in `admin.ts`**~~ — ✅ Resolved (August 4 2026): All six mutation server actions now include explicit `getIsAdmin()` guards at the application layer, consistent with `updateSiteContent()` in `siteContent.ts`.
+
+_No open issues at this time._
 
 ---
 

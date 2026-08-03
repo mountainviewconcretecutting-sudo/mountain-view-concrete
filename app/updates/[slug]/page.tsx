@@ -4,7 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Post } from "@/lib/types";
+import CommentsSection from "@/components/comments/CommentsSection";
+import type { Post, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -29,6 +30,24 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
   } catch (err) {
     console.error("Failed to fetch post by slug:", err);
     return null;
+  }
+}
+
+async function getApprovedCommentsForPost(postId: string): Promise<Comment[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("post_id", postId)
+      .eq("status", "approved")
+      .order("created_at", { ascending: true });
+
+    if (error || !data) return [];
+    return data as Comment[];
+  } catch (err) {
+    console.error("Failed to fetch comments for post:", err);
+    return [];
   }
 }
 
@@ -58,6 +77,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
     notFound();
   }
 
+  const comments = await getApprovedCommentsForPost(post.id);
   const paragraphs = post.body.split("\n\n").filter(Boolean);
 
   return (
@@ -119,6 +139,8 @@ export default async function PostDetailPage({ params }: PostPageProps) {
                 Request a Quote
               </Link>
             </div>
+
+            <CommentsSection postId={post.id} comments={comments} />
           </article>
         </div>
       </section>

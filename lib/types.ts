@@ -101,3 +101,26 @@ export interface Post {
   updated_at: string;
 }
 
+export type CommentStatus = "pending" | "approved" | "rejected";
+
+export interface Comment {
+  id: string;
+  post_id: string | null;
+  project_id: string | null;
+  author_name: string;
+  message: string;
+  status: CommentStatus;
+  created_at: string;
+  posts?: { title: string; slug?: string } | null;
+  projects?: { title: string } | null;
+}
+
+export interface CommentFormValues {
+  authorName: string;
+  message: string;
+  postId?: string | null;
+  projectId?: string | null;
+  // Honeypot field — must stay empty.
+  companyWebsite?: string;
+}
+

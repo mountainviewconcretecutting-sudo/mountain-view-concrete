@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import TestimonialSectionWithForm from "@/components/projects/TestimonialSectionWithForm";
-import type { Project, Testimonial } from "@/lib/types";
+import type { Project, Testimonial, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -48,10 +48,31 @@ async function getApprovedTestimonials(): Promise<Testimonial[]> {
   }
 }
 
+async function getApprovedProjectComments(): Promise<Comment[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .not("project_id", "is", null)
+      .eq("status", "approved")
+      .order("created_at", { ascending: true });
+    if (error) {
+      console.error("Failed to load project comments:", error.message);
+      return [];
+    }
+    return (data as Comment[]) ?? [];
+  } catch (err) {
+    console.error("Supabase client unavailable:", err);
+    return [];
+  }
+}
+
 export default async function ProjectsPage() {
-  const [projects, testimonials] = await Promise.all([
+  const [projects, testimonials, comments] = await Promise.all([
     getAllProjects(),
     getApprovedTestimonials(),
+    getApprovedProjectComments(),
   ]);
 
   return (
@@ -65,7 +86,7 @@ export default async function ProjectsPage() {
 
       <section className="bg-fog py-16 md:py-20">
         <div className="container-page">
-          <ProjectsGrid projects={projects} />
+          <ProjectsGrid projects={projects} comments={comments} />
         </div>
       </section>
 
