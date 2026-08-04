@@ -69,7 +69,7 @@ export async function getSiteContents<T extends Record<string, string>>(
     if (!error && data) {
       for (const row of data) {
         if (row.key in result && row.value !== null && row.value !== undefined) {
-          (result as any)[row.key] = row.value;
+          (result as Record<string, string>)[row.key] = row.value;
         }
       }
     }
@@ -117,10 +117,11 @@ export async function updateSiteContent(
 
     revalidatePath("/", "layout");
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Failed to update content";
     return {
       success: false,
-      message: err.message || "Failed to update content",
+      message: msg,
     };
   }
 }
