@@ -297,3 +297,41 @@ values
   ('about_mission', 'To deliver safe, precise, and dependable concrete cutting, drilling, and removal services using state-of-the-art equipment and proven techniques — so every job is completed efficiently and to the highest industry standard.')
 on conflict (key) do nothing;
 
+-- ---------------------------------------------------------------------------
+-- theme_settings — Brand color tokens editable from the admin dashboard.
+-- Values are stored as 6-digit hex strings (#rrggbb).
+-- The root layout reads these, converts to RGB channels, and injects CSS
+-- custom properties (--color-orange, --color-charcoal, etc.) so every
+-- Tailwind color token resolves through the variable at runtime.
+-- ---------------------------------------------------------------------------
+create table if not exists theme_settings (
+  key text primary key,
+  value text not null check (value ~ '^#[0-9a-fA-F]{6}$'),
+  updated_at timestamptz not null default now()
+);
+
+alter table theme_settings enable row level security;
+
+-- Anyone can read theme settings (they're just color values, not sensitive)
+create policy "theme_settings are publicly readable"
+  on theme_settings for select
+  using (true);
+
+-- Only admins can update the theme
+create policy "admins can manage theme_settings"
+  on theme_settings for all
+  using (is_admin())
+  with check (is_admin());
+
+-- Seed the 6 brand color defaults.
+-- If no rows exist, getThemeSettings() falls back to these same values in
+-- code, so the site looks identical with or without the seed having run.
+insert into theme_settings (key, value)
+values
+  ('color_orange',        '#E85D04'),
+  ('color_orange_hover',  '#C94E02'),
+  ('color_orange_soft',   '#FDECDF'),
+  ('color_charcoal',      '#1E2022'),
+  ('color_charcoal_soft', '#2A2D30'),
+  ('color_charcoal_hard', '#141516')
+on conflict (key) do nothing;

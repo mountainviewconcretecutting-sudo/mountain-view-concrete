@@ -97,8 +97,9 @@ export async function submitComment(
         };
       }
     }
-  } catch (err: any) {
-    console.error("Unexpected error saving comment:", err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+    console.error("Unexpected error saving comment:", msg);
     return {
       success: false,
       message: "An unexpected error occurred. Please try again.",

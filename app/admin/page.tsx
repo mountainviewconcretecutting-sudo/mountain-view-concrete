@@ -1,10 +1,12 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { adminLogout } from "@/lib/actions/admin";
+import { getThemeSettings } from "@/lib/actions/theme";
 import LeadsTable from "@/components/admin/LeadsTable";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import TestimonialsTable from "@/components/admin/TestimonialsTable";
 import PostsManager from "@/components/admin/PostsManager";
 import CommentsTable from "@/components/admin/CommentsTable";
+import ThemePanel from "@/components/admin/ThemePanel";
 import type { Lead, Project, Testimonial, Post, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -18,12 +20,14 @@ export default async function AdminDashboardPage() {
     { data: testimonials },
     { data: posts },
     { data: comments },
+    themeSettings,
   ] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }),
     supabase.from("projects").select("*").order("sort_order", { ascending: true }),
     supabase.from("testimonials").select("*, projects(title)").order("created_at", { ascending: false }),
     supabase.from("posts").select("*").order("created_at", { ascending: false }),
     supabase.from("comments").select("*, posts(title, slug), projects(title)").order("created_at", { ascending: false }),
+    getThemeSettings(),
   ]);
 
   return (
@@ -39,6 +43,13 @@ export default async function AdminDashboardPage() {
         </div>
 
         <section className="mt-10">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Site Theme
+          </h2>
+          <ThemePanel initialColors={themeSettings} />
+        </section>
+
+        <section className="mt-14">
           <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
             Quote Requests
           </h2>

@@ -13,7 +13,7 @@
     @apply font-display uppercase tracking-wide;
   }
   :focus-visible {
-    outline: 3px solid #E85D04;
+    outline: 3px solid rgb(var(--color-orange));
     outline-offset: 2px;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -48,8 +48,8 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(232, 93, 4, 0.9) 45%,
-      rgba(232, 93, 4, 0.9) 55%,
+      rgb(var(--color-orange) / 0.9) 45%,
+      rgb(var(--color-orange) / 0.9) 55%,
       transparent 100%
     );
     width: 40%;

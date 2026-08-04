@@ -14,14 +14,17 @@ const config: Config = {
     extend: {
       colors: {
         charcoal: {
-          DEFAULT: "#1E2022", // Industrial Slate Charcoal — primary dark surface
-          soft: "#2A2D30",
-          hard: "#141516",
+          // Values are CSS custom properties injected by RootLayout from theme_settings.
+          // rgb(.../<alpha-value>) syntax is required for Tailwind opacity modifiers
+          // (e.g. charcoal/95, bg-charcoal/10) to work correctly with CSS variables.
+          DEFAULT: "rgb(var(--color-charcoal) / <alpha-value>)",
+          soft: "rgb(var(--color-charcoal-soft) / <alpha-value>)",
+          hard: "rgb(var(--color-charcoal-hard) / <alpha-value>)",
         },
         orange: {
-          DEFAULT: "#E85D04", // Safety / Sunset Orange — primary action color
-          hover: "#C94E02",
-          soft: "#FDECDF",
+          DEFAULT: "rgb(var(--color-orange) / <alpha-value>)",
+          hover: "rgb(var(--color-orange-hover) / <alpha-value>)",
+          soft: "rgb(var(--color-orange-soft) / <alpha-value>)",
         },
         mtnGreen: {
           DEFAULT: "#2D5A27", // Mountain Green — secondary accent

@@ -13,7 +13,7 @@ export default function CtaBand() {
         <div>
           <h2 className="text-2xl md:text-3xl">Ready to get the job cut, drilled, or cleared?</h2>
           <p className="mt-2 max-w-md text-white/80">
-            Call now for emergency work, or send project details and we'll get back to you within one business day.
+            Call now for emergency work, or send project details and we&apos;ll get back to you within one business day.
           </p>
         </div>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">

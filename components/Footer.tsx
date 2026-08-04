@@ -31,7 +31,7 @@ export default function Footer() {
           <ul className="flex flex-col gap-2 text-sm text-white/70">
             <li>Wall Sawing</li>
             <li>Slab Sawing</li>
-            <li>Core Drilling (up to 22")</li>
+            <li>Core Drilling (up to 22&quot;)</li>
             <li>Demolition &amp; Removal</li>
             <li>Property Maintenance</li>
           </ul>

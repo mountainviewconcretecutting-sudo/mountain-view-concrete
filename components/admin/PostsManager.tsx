@@ -60,7 +60,7 @@ export default function PostsManager({ posts }: { posts: Post[] }) {
 
       {posts.length === 0 ? (
         <p className="rounded-sm border border-dashed border-steel-light/50 bg-white p-8 text-center text-sm text-steel">
-          No announcements published yet. Click "Add Announcement / Post" to create one.
+          No announcements published yet. Click &quot;Add Announcement / Post&quot; to create one.
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

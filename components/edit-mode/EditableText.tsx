@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useEditMode } from "./EditModeContext";
 import { updateSiteContent } from "@/lib/actions/siteContent";
+import { renderEditableField } from "@/lib/editable-fields";
 import { Pencil, Check, X, Loader2 } from "lucide-react";
 
 interface EditableTextProps {
@@ -13,53 +14,6 @@ interface EditableTextProps {
   multiline?: boolean;
 }
 
-function renderFormattedContent(key: string, text: string) {
-  if (key === "hero_tagline") {
-    const parts = text.split("\n");
-    return (
-      <h1 className="mt-4 max-w-3xl animate-revealUp text-4xl font-semibold leading-[1.05] opacity-0 [animation-delay:0.25s] sm:text-5xl md:text-6xl">
-        {parts[0]}
-        {parts.length > 1 && (
-          <>
-            <br />
-            <span className="text-orange">{parts.slice(1).join(" ")}</span>
-          </>
-        )}
-      </h1>
-    );
-  }
-
-  if (key === "hero_subtext") {
-    return (
-      <p className="mt-6 max-w-xl animate-revealUp text-base leading-relaxed text-white/70 opacity-0 [animation-delay:0.4s] md:text-lg">
-        {text}
-      </p>
-    );
-  }
-
-  if (key === "about_story") {
-    const paragraphs = text.split("\n\n").filter(Boolean);
-    return (
-      <>
-        {paragraphs.map((p, idx) => (
-          <p key={idx} className="mt-4 leading-relaxed text-steel">
-            {p}
-          </p>
-        ))}
-      </>
-    );
-  }
-
-  if (key === "about_mission") {
-    return (
-      <p className="mt-4 leading-relaxed text-steel">
-        {text}
-      </p>
-    );
-  }
-
-  return <span>{text}</span>;
-}
 
 export default function EditableText({
   contentKey,
@@ -95,7 +49,7 @@ export default function EditableText({
 
   // If non-admin or edit mode is off, render plain text with zero edit UI
   if (!isAdmin || !isEditMode) {
-    return <>{renderFormattedContent(contentKey, text)}</>;
+    return <>{renderEditableField(contentKey, text)}</>;
   }
 
   const handleSave = async (valueToSave: string) => {
@@ -208,7 +162,7 @@ export default function EditableText({
       <span className="absolute -top-3 -right-3 z-10 hidden items-center gap-1 rounded-full bg-orange px-2 py-0.5 font-display text-[10px] uppercase tracking-wider text-white shadow-md group-hover:flex animate-fade-in">
         <Pencil size={11} aria-hidden="true" /> Edit
       </span>
-      {renderFormattedContent(contentKey, text)}
+      {renderEditableField(contentKey, text)}
     </div>
   );
 }

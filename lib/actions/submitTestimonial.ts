@@ -82,8 +82,9 @@ export async function submitTestimonial(
         };
       }
     }
-  } catch (err: any) {
-    console.error("Unexpected error saving testimonial:", err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+    console.error("Unexpected error saving testimonial:", msg);
     return {
       success: false,
       message: "An unexpected error occurred. Please try again.",
