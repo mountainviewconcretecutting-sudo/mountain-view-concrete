@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { ActionResult, LeadStatus, Project } from "@/lib/types";
+import { getIsAdmin } from "@/lib/actions/siteContent";
+import type { ActionResult, LeadStatus, Project, Post } from "@/lib/types";
 
 export async function adminLogin(
   _prev: ActionResult | undefined,
@@ -34,6 +35,8 @@ export async function adminLogout() {
 }
 
 export async function updateLeadStatus(leadId: string, status: LeadStatus) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("leads").update({ status }).eq("id", leadId);
   if (error) throw new Error(error.message);
@@ -44,6 +47,8 @@ export async function updateTestimonialStatus(
   testimonialId: string,
   status: "pending" | "approved" | "rejected"
 ) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("testimonials")
@@ -76,6 +81,10 @@ const projectSchema = z.object({
 export async function upsertProject(
   input: Partial<Project> & { id?: string }
 ): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
   const parsed = projectSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, message: "Please check the project fields and try again." };
@@ -97,6 +106,8 @@ export async function upsertProject(
 }
 
 export async function deleteProject(projectId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("projects").delete().eq("id", projectId);
   if (error) throw new Error(error.message);
@@ -104,3 +115,89 @@ export async function deleteProject(projectId: string) {
   revalidatePath("/projects");
   revalidatePath("/");
 }
+
+const postSchema = z.object({
+  title: z.string().min(2, "Title is required").max(200),
+  slug: z.string().min(2, "Slug is required").max(200),
+  body: z.string().min(5, "Body content is required"),
+  cover_image_url: z.string().url().optional().nullable().or(z.literal("")),
+  is_published: z.boolean(),
+});
+
+export async function upsertPost(
+  input: Partial<Post> & { id?: string }
+): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  const parsed = postSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, message: "Please check the post fields and try again." };
+  }
+
+  const payload = {
+    title: parsed.data.title,
+    slug: parsed.data.slug,
+    body: parsed.data.body,
+    cover_image_url: parsed.data.cover_image_url || null,
+    is_published: parsed.data.is_published,
+    updated_at: new Date().toISOString(),
+  };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = input.id
+    ? await supabase.from("posts").update(payload).eq("id", input.id)
+    : await supabase.from("posts").insert(payload);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+  if (parsed.data.slug) {
+    revalidatePath(`/updates/${parsed.data.slug}`);
+  }
+  return { success: true, message: "Post saved." };
+}
+
+export async function deletePost(postId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+}
+
+export async function updateCommentStatus(
+  commentId: string,
+  status: "pending" | "approved" | "rejected"
+) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("comments")
+    .update({ status })
+    .eq("id", commentId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+  revalidatePath("/projects");
+}
+
+export async function deleteComment(commentId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("comments").delete().eq("id", commentId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/updates");
+  revalidatePath("/projects");
+}
+
+

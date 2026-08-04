@@ -89,3 +89,38 @@ export interface ActionResult<T = undefined> {
   data?: T;
   fieldErrors?: Record<string, string>;
 }
+
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  body: string;
+  cover_image_url: string | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export type CommentStatus = "pending" | "approved" | "rejected";
+
+export interface Comment {
+  id: string;
+  post_id: string | null;
+  project_id: string | null;
+  author_name: string;
+  message: string;
+  status: CommentStatus;
+  created_at: string;
+  posts?: { title: string; slug?: string } | null;
+  projects?: { title: string } | null;
+}
+
+export interface CommentFormValues {
+  authorName: string;
+  message: string;
+  postId?: string | null;
+  projectId?: string | null;
+  // Honeypot field — must stay empty.
+  companyWebsite?: string;
+}
+

@@ -23,6 +23,8 @@ create type lead_status as enum ('new', 'contacted', 'quoted', 'won', 'lost');
 
 create type testimonial_status as enum ('pending', 'approved', 'rejected');
 
+create type comment_status as enum ('pending', 'approved', 'rejected');
+
 -- ---------------------------------------------------------------------------
 -- admin_profiles
 -- One row per Supabase Auth user who is allowed into /admin. Auth itself is
@@ -196,6 +198,79 @@ create policy "approved testimonials are publicly readable"
 -- Admins can manage testimonials
 create policy "admins can manage testimonials"
   on testimonials for all
+  using (is_admin())
+  with check (is_admin());
+
+-- ---------------------------------------------------------------------------
+-- posts — Company announcements, news, and updates (admin-managed)
+-- ---------------------------------------------------------------------------
+create table if not exists posts (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text not null unique,
+  body text not null,
+  cover_image_url text,
+  is_published boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists posts_published_idx on posts (is_published, created_at desc);
+
+alter table posts enable row level security;
+
+-- Public can read only published posts
+create policy "public can read published posts"
+  on posts for select
+  using (is_published = true);
+
+-- Admins can do everything
+create policy "admins can manage posts"
+  on posts for all
+  using (is_admin())
+  with check (is_admin());
+
+-- Reuse the shared set_updated_at() trigger function for posts
+create trigger posts_set_updated_at
+before update on posts
+for each row execute function set_updated_at();
+
+-- ---------------------------------------------------------------------------
+-- comments — User comments on posts and projects (public submit, admin moderate)
+-- ---------------------------------------------------------------------------
+create table if not exists comments (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid references posts (id) on delete cascade,
+  project_id uuid references projects (id) on delete cascade,
+  author_name text not null,
+  message text not null,
+  status comment_status not null default 'pending',
+  created_at timestamptz not null default now(),
+
+  constraint check_comment_target check (
+    (post_id is not null and project_id is null) or
+    (post_id is null and project_id is not null)
+  )
+);
+
+create index if not exists comments_post_idx on comments (post_id, status, created_at desc);
+create index if not exists comments_project_idx on comments (project_id, status, created_at desc);
+
+alter table comments enable row level security;
+
+-- Anyone can submit a pending comment
+create policy "anyone can submit a comment"
+  on comments for insert
+  with check (status = 'pending');
+
+-- Public can read approved comments
+create policy "approved comments are publicly readable"
+  on comments for select
+  using (status = 'approved');
+
+-- Admins can manage comments
+create policy "admins can manage comments"
+  on comments for all
   using (is_admin())
   with check (is_admin());
 
