@@ -7,13 +7,13 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-fog text-charcoal font-body antialiased;
+    @apply bg-surface text-on-surface font-body antialiased;
   }
-  h1, h2, h3, h4 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-display uppercase tracking-wide;
   }
   :focus-visible {
-    outline: 3px solid rgb(var(--color-orange));
+    outline: 3px solid #f97316;
     outline-offset: 2px;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -28,28 +28,32 @@
 
 @layer components {
   /*
-   * SIGNATURE MOTIF — the "cut line".
-   * Every major section boundary on the site is a diagonal blade-cut rather
-   * than a straight edge, echoing the company's actual trade (concrete
-   * sawing). Applied via a clip-path on the section that sits BELOW the
-   * divider, so the section above appears to have been sliced into it.
+   * SIGNATURE MOTIFS — Mountain View Industrial UI (DESIGN.md)
    */
   .cut-below {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+  }
+  .cut-below-slope {
     clip-path: polygon(0 3.2vw, 100% 0, 100% 100%, 0 100%);
   }
   .cut-above {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.2vw));
   }
 
-  /* Thin animated blade line used once, in the hero, on load */
+  /* 45-degree cut / saw notch motif for buttons & accents */
+  .notch-top-right {
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+
+  /* Thin animated blade line used in hero on load */
   .blade-line {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgb(var(--color-orange) / 0.9) 45%,
-      rgb(var(--color-orange) / 0.9) 55%,
+      rgba(249, 115, 22, 0.9) 45%,
+      rgba(249, 115, 22, 0.9) 55%,
       transparent 100%
     );
     width: 40%;
@@ -57,22 +61,23 @@
   }
 
   .container-page {
-    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+    @apply mx-auto w-full max-w-[1280px] px-5 sm:px-8;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-orange px-6 py-3.5
-           font-display text-sm uppercase tracking-wider text-white shadow-sm transition-colors
-           hover:bg-orange-hover focus-visible:outline-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-none bg-primary px-6 py-3.5
+           font-display font-bold text-base uppercase tracking-wider text-white shadow-hard
+           transition-all duration-150 hover:bg-primary-dark hover:shadow-hard-lg focus-visible:outline-offset-2;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-charcoal px-6 py-3
-           font-display text-sm uppercase tracking-wider text-charcoal transition-colors
-           hover:bg-charcoal hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 rounded-none border-2 border-deep-slate bg-transparent px-6 py-3
+           font-display font-bold text-base uppercase tracking-wider text-deep-slate shadow-none transition-all duration-150
+           hover:bg-deep-slate hover:text-white focus-visible:outline-offset-2;
   }
 
   .eyebrow {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-orange;
+    @apply font-mono text-xs font-semibold uppercase tracking-[0.1em] text-primary;
   }
 }

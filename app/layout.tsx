@@ -1,27 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Oswald, Work_Sans, JetBrains_Mono } from "next/font/google";
+import { Barlow_Condensed, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyCallBar from "@/components/StickyCallBar";
 
-const oswald = Oswald({
+const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-oswald",
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-barlow",
   display: "swap",
 });
 
-const workSans = Work_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-worksans",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   variable: "--font-jetbrains",
   display: "swap",
 });
@@ -96,7 +96,7 @@ export default async function RootLayout({
         <style dangerouslySetInnerHTML={{ __html: `:root {\n    ${cssVars}\n  }` }} />
       </head>
       <body
-        className={`${oswald.variable} ${workSans.variable} ${jetbrainsMono.variable} font-body`}
+        className={`${barlowCondensed.variable} ${inter.variable} ${jetbrainsMono.variable} font-body`}
       >
         <EditModeProvider isAdmin={isAdmin}>
           <a
