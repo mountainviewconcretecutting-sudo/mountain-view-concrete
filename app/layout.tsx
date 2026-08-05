@@ -111,21 +111,25 @@ export default async function RootLayout({
       { "@type": "AdministrativeArea", name: "Cochrane" },
       { "@type": "AdministrativeArea", name: "Western Alberta" },
     ],
-    openingHoursSpecification: [
-      {
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "emergency",
+      telephone: "825-734-1419",
+      hoursAvailable: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         opens: "00:00",
         closes: "23:59",
       },
-    ],
+      areaServed: "Calgary and Western Alberta",
+      availableLanguage: "English",
+    },
     knowsAbout: [
       "Wall Sawing",
       "Slab Sawing",
       "Core Drilling",
       "Concrete Demolition & Removal",
     ],
-    priceRange: "$$",
   };
 
   return (
