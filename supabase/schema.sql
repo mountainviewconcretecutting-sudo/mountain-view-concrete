@@ -298,6 +298,99 @@ values
 on conflict (key) do nothing;
 
 -- ---------------------------------------------------------------------------
+-- services — Catalogue of services offered (admin-manageable)
+-- ---------------------------------------------------------------------------
+create table if not exists services (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text not null unique,
+  description text not null,
+  spec_list text[],
+  icon_name text,
+  image_url text,
+  display_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists services_display_order_idx on services (display_order);
+
+alter table services enable row level security;
+
+create policy "services are publicly readable"
+  on services for select
+  using (true);
+
+create policy "admins can manage services"
+  on services for all
+  using (is_admin())
+  with check (is_admin());
+
+create trigger services_set_updated_at
+before update on services
+for each row execute function set_updated_at();
+
+-- ---------------------------------------------------------------------------
+-- equipment — Fleet and machinery inventory (admin-manageable)
+-- ---------------------------------------------------------------------------
+create table if not exists equipment (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text,
+  specs text[],
+  image_url text,
+  display_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists equipment_display_order_idx on equipment (display_order);
+
+alter table equipment enable row level security;
+
+create policy "equipment is publicly readable"
+  on equipment for select
+  using (true);
+
+create policy "admins can manage equipment"
+  on equipment for all
+  using (is_admin())
+  with check (is_admin());
+
+create trigger equipment_set_updated_at
+before update on equipment
+for each row execute function set_updated_at();
+
+-- Seed initial services
+insert into services (title, slug, description, spec_list, icon_name, display_order)
+values
+  ('Wall Sawing', 'wall-sawing',
+   'Precision cutting through reinforced concrete walls for new openings, doorways, and mechanical penetrations — indoors or out, on active job sites.',
+   array['Up to 24" depth', 'Flush cutting capable', 'Track-mounted electric/hydraulic saws'], 'Scissors', 1),
+  ('Slab Sawing', 'slab-sawing',
+   'High-capacity floor and flat slab sawing for retrofits, utility trenches, and structural modifications, with clean, accurate cut lines.',
+   array['Electric & diesel flat saws', 'Control joint sawing', 'Trenching up to 18" depth'], 'Scissors', 2),
+  ('Core Drilling', 'core-drilling',
+   'Precision core drilling capabilities up to 22 inches in diameter, for conduit runs, plumbing penetrations, anchor bolts, and structural inspections.',
+   array['Up to 22" diameter', 'Any angle / ceiling mounting', 'Electric & hydraulic rigs'], 'CircleDot', 3),
+  ('Demolition & Removal', 'demolition-removal',
+   'Safe concrete demolition and jackhammering, Bobcat and mini-excavator operation, and full haul-away disposal — left clean and job-site ready.',
+   array['Selective structural demolition', 'Robotic/hydraulic hammering', 'Full site cleanup & disposal'], 'HardHat', 4),
+  ('Additional Property Services', 'property-services',
+   'Beyond concrete, our crew handles a range of property maintenance and installation work for the same commercial and residential clients we cut for.',
+   array['Parking lot line painting', 'Wall painting', 'Furnace & AC maintenance', 'Roof maintenance', 'Snow removal', 'Topsoil supply & turf installation', 'Bollard installation', 'Mobile welding services', 'Security camera installation', 'Detector loop installation'], 'Wrench', 5)
+on conflict (slug) do nothing;
+
+-- Seed initial equipment
+insert into equipment (name, description, specs, display_order)
+values
+  ('Mini excavator (Mini Ho)', 'Compact excavator for tight-access interior and exterior excavation and concrete removal.', array['Rubber tracks', 'Hydraulic breaker attachment', 'Zero tail-swing'], 1),
+  ('Bobcat Skid-Steer', 'High-capacity loader for efficient debris removal, gravel placement, and site grading.', array['Heavy duty bucket', 'High-flow hydraulics', 'Enclosed cab'], 2),
+  ('Dump trailer', 'Heavy-duty dump trailer for fast material haul-away and concrete slab disposal.', array['14,000 lbs GVWR', 'Hydraulic lift dump', 'Tarp cover system'], 3),
+  ('22-inch capacity core drills', 'Heavy-duty electric and hydraulic core drill rigs capable of penetrating heavily reinforced concrete up to 22" diameter.', array['22" diameter capacity', 'Vacuum-base and anchor-base mounts', 'Multi-speed gearboxes'], 4)
+on conflict do nothing;
+
+-- ---------------------------------------------------------------------------
 -- theme_settings — Brand color tokens editable from the admin dashboard.
 -- Values are stored as 6-digit hex strings (#rrggbb).
 -- The root layout reads these, converts to RGB channels, and injects CSS

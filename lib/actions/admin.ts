@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getIsAdmin } from "@/lib/actions/siteContent";
-import type { ActionResult, LeadStatus, Project, Post } from "@/lib/types";
+import type { ActionResult, LeadStatus, Project, Post, Service, Equipment } from "@/lib/types";
 
 export async function adminLogin(
   _prev: ActionResult | undefined,
@@ -198,6 +198,120 @@ export async function deleteComment(commentId: string) {
   revalidatePath("/admin");
   revalidatePath("/updates");
   revalidatePath("/projects");
+}
+
+const serviceSchema = z.object({
+  title: z.string().min(2, "Title is required").max(150),
+  slug: z.string().min(2, "Slug is required").max(150),
+  description: z.string().min(5, "Description is required"),
+  spec_list: z.array(z.string()).optional().nullable(),
+  icon_name: z.string().optional().nullable(),
+  image_url: z.string().url().optional().nullable().or(z.literal("")),
+  display_order: z.coerce.number().int().min(0).default(0),
+});
+
+export async function upsertService(
+  input: Partial<Service> & { id?: string }
+): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  const parsed = serviceSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, message: "Please check the service fields and try again." };
+  }
+
+  const payload = {
+    title: parsed.data.title,
+    slug: parsed.data.slug,
+    description: parsed.data.description,
+    spec_list: parsed.data.spec_list || null,
+    icon_name: parsed.data.icon_name || null,
+    image_url: parsed.data.image_url || null,
+    display_order: parsed.data.display_order,
+    updated_at: new Date().toISOString(),
+  };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = input.id
+    ? await supabase.from("services").update(payload).eq("id", input.id)
+    : await supabase.from("services").insert(payload);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/services");
+  revalidatePath("/");
+  return { success: true, message: "Service saved." };
+}
+
+export async function deleteService(serviceId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("services").delete().eq("id", serviceId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/services");
+  revalidatePath("/");
+}
+
+const equipmentSchema = z.object({
+  name: z.string().min(2, "Name is required").max(150),
+  description: z.string().optional().nullable(),
+  specs: z.array(z.string()).optional().nullable(),
+  image_url: z.string().url().optional().nullable().or(z.literal("")),
+  display_order: z.coerce.number().int().min(0).default(0),
+});
+
+export async function upsertEquipment(
+  input: Partial<Equipment> & { id?: string }
+): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  const parsed = equipmentSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, message: "Please check the equipment fields and try again." };
+  }
+
+  const payload = {
+    name: parsed.data.name,
+    description: parsed.data.description || null,
+    specs: parsed.data.specs || null,
+    image_url: parsed.data.image_url || null,
+    display_order: parsed.data.display_order,
+    updated_at: new Date().toISOString(),
+  };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = input.id
+    ? await supabase.from("equipment").update(payload).eq("id", input.id)
+    : await supabase.from("equipment").insert(payload);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/services");
+  revalidatePath("/");
+  return { success: true, message: "Equipment saved." };
+}
+
+export async function deleteEquipment(equipmentId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("equipment").delete().eq("id", equipmentId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/services");
+  revalidatePath("/");
 }
 
 
