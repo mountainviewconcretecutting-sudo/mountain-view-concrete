@@ -22,6 +22,8 @@ export default function Footer() {
             <li><Link href="/services" className="hover:text-orange">Services</Link></li>
             <li><Link href="/projects" className="hover:text-orange">Featured Projects</Link></li>
             <li><Link href="/contact" className="hover:text-orange">Contact</Link></li>
+            <li><Link href="/privacy" className="hover:text-orange">Privacy Policy</Link></li>
+            <li><Link href="/terms" className="hover:text-orange">Terms of Service</Link></li>
             <li><Link href="/admin/login" className="hover:text-orange text-white/50">Admin Portal</Link></li>
           </ul>
         </nav>
