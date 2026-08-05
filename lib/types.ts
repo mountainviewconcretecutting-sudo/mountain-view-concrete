@@ -124,3 +124,27 @@ export interface CommentFormValues {
   companyWebsite?: string;
 }
 
+export interface Service {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  spec_list: string[] | null;
+  icon_name: string | null;
+  image_url: string | null;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Equipment {
+  id: string;
+  name: string;
+  description: string | null;
+  specs: string[] | null;
+  image_url: string | null;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+

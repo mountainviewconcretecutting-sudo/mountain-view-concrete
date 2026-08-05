@@ -6,8 +6,10 @@ import ProjectsManager from "@/components/admin/ProjectsManager";
 import TestimonialsTable from "@/components/admin/TestimonialsTable";
 import PostsManager from "@/components/admin/PostsManager";
 import CommentsTable from "@/components/admin/CommentsTable";
+import ServicesManager from "@/components/admin/ServicesManager";
+import EquipmentManager from "@/components/admin/EquipmentManager";
 import ThemePanel from "@/components/admin/ThemePanel";
-import type { Lead, Project, Testimonial, Post, Comment } from "@/lib/types";
+import type { Lead, Project, Testimonial, Post, Comment, Service, Equipment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +22,8 @@ export default async function AdminDashboardPage() {
     { data: testimonials },
     { data: posts },
     { data: comments },
+    { data: services },
+    { data: equipment },
     themeSettings,
   ] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }),
@@ -27,6 +31,8 @@ export default async function AdminDashboardPage() {
     supabase.from("testimonials").select("*, projects(title)").order("created_at", { ascending: false }),
     supabase.from("posts").select("*").order("created_at", { ascending: false }),
     supabase.from("comments").select("*, posts(title, slug), projects(title)").order("created_at", { ascending: false }),
+    supabase.from("services").select("*").order("display_order", { ascending: true }),
+    supabase.from("equipment").select("*").order("display_order", { ascending: true }),
     getThemeSettings(),
   ]);
 
@@ -54,6 +60,20 @@ export default async function AdminDashboardPage() {
             Quote Requests
           </h2>
           <LeadsTable leads={(leads as Lead[]) ?? []} />
+        </section>
+
+        <section className="mt-14">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Service Catalogue Management
+          </h2>
+          <ServicesManager services={(services as Service[]) ?? []} />
+        </section>
+
+        <section className="mt-14">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Machinery &amp; Fleet Equipment
+          </h2>
+          <EquipmentManager equipment={(equipment as Equipment[]) ?? []} />
         </section>
 
         <section className="mt-14">
