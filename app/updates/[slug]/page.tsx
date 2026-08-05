@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CommentsSection from "@/components/comments/CommentsSection";
 import type { Post, Comment } from "@/lib/types";
@@ -111,7 +111,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
           <article className="rounded-sm border border-steel-light/30 bg-white p-6 md:p-10 shadow-sm">
             {post.cover_image_url && (
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-steel-light/20 mb-8">
-                <Image
+                <ImageWithFallback
                   src={post.cover_image_url}
                   alt={post.title}
                   fill
