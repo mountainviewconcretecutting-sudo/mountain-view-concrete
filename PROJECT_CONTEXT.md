@@ -37,7 +37,7 @@ The primary objective of the site is to drive qualified quote requests, showcase
 | **Styling** | Tailwind CSS | `^3.4.14` | Utility-first CSS configured for "Mountain View Industrial UI" (Rugged Sophistication): Barlow Condensed / Inter / JetBrains Mono font loaders, `#f97316` Safety Orange, `#0F172A` Deep Slate, hard shadows (`4px 4px 0px #0F172A`), `.notch-top-right`, `.cut-below`, and custom brand tokens. |
 | **Database & Auth** | Supabase (Postgres) | `@supabase/supabase-js` `^2.45.4`<br>`@supabase/ssr` `^0.5.2` | Managed Postgres database with Row Level Security (RLS), Supabase Auth session handling, and server-role client overrides. |
 | **Form Validation** | Zod | `^3.23.8` | Shared validation schemas for quote forms, testimonials, projects, posts, comments, services, and equipment. |
-| **Icons** | Lucide React | `^0.454.0` | Lightweight SVG icons (`Pencil`, `CheckCircle2`, `Loader2`, `ImageOff`, `Plus`, `Trash2`, `Sparkles`, `Eye`, `EyeOff`, `Calendar`, `Newspaper`, etc.). |
+| **Icons** | Lucide React | `^0.454.0` | Lightweight SVG icons (`Pencil`, `CheckCircle2`, `Loader2`, `ImageOff`, `Plus`, `Trash2`, `Sparkles`, `Eye`, `EyeOff`, `Calendar`, `Newspaper`, `Upload`, etc.). |
 | **Email Delivery** | Resend | `^4.0.1` | Transactional email notifications for newly submitted customer quote leads. |
 | **Utilities** | `clsx` | `^2.1.1` | Conditional class joining for UI state handling. |
 
@@ -105,7 +105,7 @@ mountain-view-concrete-cutting/
     │   │   └── CtaBand.tsx
     │   ├── admin/                      # Admin dashboard client tables and managers
     │   │   ├── LeadsTable.tsx          # Lead management table with status updates
-    │   │   ├── ProjectsManager.tsx     # Project CRUD with modal form
+    │   │   ├── ProjectsManager.tsx     # Project CRUD with modal form & image URL handling
     │   │   ├── PostsManager.tsx        # Posts CRUD: card grid + modal form (title, slug, body, cover_image_url, is_published)
     │   │   ├── TestimonialsTable.tsx   # Testimonial moderation table (approve/reject)
     │   │   ├── CommentsTable.tsx       # Unified post & project comment moderation table
@@ -219,25 +219,35 @@ LEAD_NOTIFICATION_EMAIL=crafuse0@gmail.com
 
 ---
 
-## 7. Database Schema & Feature Status
+## 7. Pre-Launch Deployment Checklist
 
-- **`schema.sql` Sync**: Contains complete DDL, Indexes, Triggers, and RLS policies for all 10 project tables:
-  1. `admin_profiles`
-  2. `projects`
-  3. `leads`
-  4. `site_content`
-  5. `testimonials`
-  6. `posts`
-  7. `comments`
-  8. `services`
-  9. `equipment`
-  10. `theme_settings`
-- **RLS Policy Safety**: All admin-facing policies use `is_admin()` (`SECURITY DEFINER` on `admin_profiles`) with zero raw recursive subqueries.
-- **Build Health**: `npx tsc --noEmit` passed with 0 errors. `npm run build` passed with 0 errors.
+Before deploying live to a custom domain (e.g. Vercel, Netlify, or custom VPS), complete these 3 steps:
+
+1. **Production Database Migration**:
+   - Run `supabase/schema.sql` in the production Supabase project (`jzzzlrsqmglkhyhmrqjq`).
+2. **Provision Admin Account**:
+   - Run `npm run create-admin admin@mountainviewconcrete.ca SecurePassword123! "Admin User"` pointing to production credentials.
+3. **Set Production Environment Variables**:
+   - Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, and `LEAD_NOTIFICATION_EMAIL` in hosting provider settings.
 
 ---
 
-## 8. AI Maintenance & Update Mandate
+## 8. Upcoming Features & Technical Roadmap (Post-Launch / Priority)
+
+### Admin Drag-and-Drop Image Uploader Component (`<ImageDropzone />`)
+- **Objective**: Allow authenticated admins to drag and drop image files (`.jpg`, `.png`, `.webp`) directly inside CMS modals (`ProjectsManager`, `PostsManager`, `ServicesManager`, `EquipmentManager`) to automatically upload them to Supabase Storage and set target URL fields.
+- **Architecture Requirements**:
+  1. **Supabase Storage Bucket**: Create a public `site-images` bucket in Supabase with public READ access and admin-only WRITE access (`is_admin()`).
+  2. **Re-usable Client Component**: Build `components/admin/ImageDropzone.tsx` supporting:
+     - Drag over hover styling (dashed safety-orange border).
+     - File size limit checks (e.g., max 5MB) & image format validation.
+     - Live progress bar indicator during upload.
+     - Auto-populating target image URL form state on upload completion.
+  3. **Server Action / Storage Handler**: Server action or client upload handler using `supabase.storage.from("site-images").upload(...)`.
+
+---
+
+## 9. AI Maintenance & Update Mandate
 
 - **Living Document Policy**: `PROJECT_CONTEXT.md` is a living document and MUST be kept up to date.
 - **Feature Completion Checklist**: Whenever a feature, route, component, server action, or database table is added, modified, or removed, the AI MUST update `PROJECT_CONTEXT.md`.
