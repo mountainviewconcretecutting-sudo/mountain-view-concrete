@@ -232,18 +232,25 @@ Before deploying live to a custom domain (e.g. Vercel, Netlify, or custom VPS), 
 
 ---
 
-## 8. Upcoming Features & Technical Roadmap (Post-Launch / Priority)
+## 8. Implemented Features & Technical Capabilities
 
 ### Admin Drag-and-Drop Image Uploader Component (`<ImageDropzone />`)
-- **Objective**: Allow authenticated admins to drag and drop image files (`.jpg`, `.png`, `.webp`) directly inside CMS modals (`ProjectsManager`, `PostsManager`, `ServicesManager`, `EquipmentManager`) to automatically upload them to Supabase Storage and set target URL fields.
-- **Architecture Requirements**:
-  1. **Supabase Storage Bucket**: Create a public `site-images` bucket in Supabase with public READ access and admin-only WRITE access (`is_admin()`).
-  2. **Re-usable Client Component**: Build `components/admin/ImageDropzone.tsx` supporting:
-     - Drag over hover styling (dashed safety-orange border).
-     - File size limit checks (e.g., max 5MB) & image format validation.
-     - Live progress bar indicator during upload.
-     - Auto-populating target image URL form state on upload completion.
-  3. **Server Action / Storage Handler**: Server action or client upload handler using `supabase.storage.from("site-images").upload(...)`.
+- **Status**: ✅ **Implemented & Integrated**
+- **Location**: `components/admin/ImageDropzone.tsx`
+- **Capabilities**:
+  - Drag-and-drop file interface with industrial slate & safety orange drag-over highlights.
+  - Automatic upload to Supabase Storage bucket `site-images`.
+  - Client-side validation (MIME type check + 5MB size limit).
+  - Live progress loading state & image thumbnail preview upon successful upload.
+  - Manual text URL input retained as a fallback.
+- **Integrated Into**:
+  - `ProjectsManager.tsx` (Project Image Upload)
+  - `PostsManager.tsx` (Cover Image Upload)
+  - `ServicesManager.tsx` (Service Card Image Upload)
+  - `EquipmentManager.tsx` (Equipment Photo Upload)
+- **Supabase Storage RLS**:
+  - Bucket `site-images` public READ policy.
+  - Admin-only INSERT/DELETE policies (`is_admin()`) added to `supabase/schema.sql`.
 
 ---
 

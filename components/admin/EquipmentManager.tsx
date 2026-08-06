@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus, ImageOff } from "lucide-react";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import { upsertEquipment, deleteEquipment } from "@/lib/actions/admin";
 import type { Equipment } from "@/lib/types";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 const EMPTY: Omit<Equipment, "id" | "created_at" | "updated_at"> = {
   name: "",
@@ -181,12 +182,16 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Image URL (Optional)</label>
+                <ImageDropzone
+                  currentUrl={editing.image_url || ""}
+                  onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
+                  label="Equipment Photo (Drag & Drop to Upload)"
+                />
                 <input
-                  placeholder="https://..."
+                  placeholder="Or enter Image URL manually"
                   value={editing.image_url || ""}
                   onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
                 />
               </div>
 

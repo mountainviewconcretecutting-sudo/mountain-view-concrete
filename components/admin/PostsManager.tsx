@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus, Sparkles, Eye, EyeOff } from "lucide-react";
 import { upsertPost, deletePost } from "@/lib/actions/admin";
 import type { Post } from "@/lib/types";
 import { slugify } from "@/lib/utils/slugify";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 const EMPTY: Omit<Post, "id" | "created_at" | "updated_at"> = {
   title: "",
@@ -161,14 +162,16 @@ export default function PostsManager({ posts }: { posts: Post[] }) {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-steel mb-1">
-                  Cover Image URL (Optional)
-                </label>
+                <ImageDropzone
+                  currentUrl={editing.cover_image_url || ""}
+                  onUploadSuccess={(url) => setEditing({ ...editing, cover_image_url: url })}
+                  label="Cover Image (Drag & Drop to Upload)"
+                />
                 <input
-                  placeholder="https://... or /images/..."
+                  placeholder="Or enter Image URL manually"
                   value={editing.cover_image_url || ""}
                   onChange={(e) => setEditing({ ...editing, cover_image_url: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
                 />
               </div>
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { upsertService, deleteService } from "@/lib/actions/admin";
 import type { Service } from "@/lib/types";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 const EMPTY: Omit<Service, "id" | "created_at" | "updated_at"> = {
   title: "",
@@ -196,15 +197,19 @@ export default function ServicesManager({ services }: { services: Service[] }) {
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className="block text-xs font-mono uppercase text-steel mb-1">Optional Image URL</label>
-                  <input
-                    placeholder="https://..."
-                    value={editing.image_url || ""}
-                    onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                    className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
-                  />
-                </div>
+              <div>
+                <ImageDropzone
+                  currentUrl={editing.image_url || ""}
+                  onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
+                  label="Service Card Image (Drag & Drop to Upload)"
+                />
+                <input
+                  placeholder="Or enter Image URL manually"
+                  value={editing.image_url || ""}
+                  onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
+                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
+                />
+              </div>
               </div>
 
               {error && <p className="text-sm font-medium text-orange-hover">{error}</p>}

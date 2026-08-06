@@ -428,3 +428,23 @@ values
   ('color_charcoal_soft', '#2A2D30'),
   ('color_charcoal_hard', '#141516')
 on conflict (key) do nothing;
+
+-- ---------------------------------------------------------------------------
+-- Storage bucket: site-images (Public read access, admin-only write access)
+-- ---------------------------------------------------------------------------
+insert into storage.buckets (id, name, public)
+values ('site-images', 'site-images', true)
+on conflict (id) do nothing;
+
+create policy "Public Read Access on site-images"
+  on storage.objects for select
+  using (bucket_id = 'site-images');
+
+create policy "Admin Upload Access on site-images"
+  on storage.objects for insert
+  with check (bucket_id = 'site-images' and public.is_admin());
+
+create policy "Admin Delete Access on site-images"
+  on storage.objects for delete
+  using (bucket_id = 'site-images' and public.is_admin());
+
