@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, Plus, ImageOff } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { upsertEquipment, deleteEquipment } from "@/lib/actions/admin";
 import type { Equipment } from "@/lib/types";
 
@@ -93,11 +94,17 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
             </div>
 
             {item.image_url ? (
-              <img
-                src={item.image_url}
-                alt={item.name}
-                className="mt-3 h-32 w-full rounded-sm object-cover border border-steel-light/20"
-              />
+              <div className="relative mt-3 h-32 w-full overflow-hidden rounded-sm border border-steel-light/20">
+                <ImageWithFallback
+                  src={item.image_url}
+                  alt={item.name}
+                  fill
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                  className="object-cover"
+                  fallbackText="No Image Provided"
+                  iconSize={16}
+                />
+              </div>
             ) : (
               <div className="mt-3 flex h-24 w-full items-center justify-center rounded-sm bg-fog text-steel border border-steel-light/20">
                 <div className="flex items-center gap-1.5 text-xs">

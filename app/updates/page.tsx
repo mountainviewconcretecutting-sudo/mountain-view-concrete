@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 
@@ -68,7 +68,7 @@ export default async function UpdatesPage() {
                   >
                     {post.cover_image_url && (
                       <div className="relative aspect-[16/9] w-full overflow-hidden bg-steel-light/20">
-                        <Image
+                        <ImageWithFallback
                           src={post.cover_image_url}
                           alt={post.title}
                           fill

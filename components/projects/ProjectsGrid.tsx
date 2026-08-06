@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageSquare, ChevronDown, ChevronUp, ImageOff } from "lucide-react";
 import CommentsSection from "@/components/comments/CommentsSection";
 import type { Project, ProjectCategory, Comment } from "@/lib/types";
 
@@ -22,6 +22,7 @@ export default function ProjectsGrid({
 }) {
   const [filter, setFilter] = useState<ProjectCategory | "all">("all");
   const [activeCommentProjectId, setActiveCommentProjectId] = useState<string | null>(null);
+  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
 
   const filtered = useMemo(
     () => (filter === "all" ? projects : projects.filter((p) => p.category === filter)),
@@ -70,18 +71,27 @@ export default function ProjectsGrid({
           {filtered.map((project) => {
             const projectComments = commentsByProject[project.id] || [];
             const isCommentsOpen = activeCommentProjectId === project.id;
+            const hasImgError = !project.image_url || imgErrors[project.id];
 
             return (
               <article key={project.id} className="flex flex-col justify-between overflow-hidden rounded-sm bg-white shadow-sm border border-steel-light/20">
                 <div>
                   <div className="relative aspect-[4/3] w-full bg-steel-light/20">
-                    <Image
-                      src={project.image_url}
-                      alt={project.title}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
-                    />
+                    {hasImgError ? (
+                      <div className="flex h-full w-full flex-col items-center justify-center text-steel">
+                        <ImageOff size={28} className="text-steel-light" aria-hidden="true" />
+                        <span className="mt-1 text-xs">Photo unavailable</span>
+                      </div>
+                    ) : (
+                      <Image
+                        src={project.image_url}
+                        alt={project.title}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                        onError={() => setImgErrors((prev) => ({ ...prev, [project.id]: true }))}
+                      />
+                    )}
                   </div>
                   <div className="p-5">
                     <span className="font-mono text-[11px] uppercase tracking-widest text-orange">

@@ -184,16 +184,17 @@ export default function ServicesManager({ services }: { services: Service[] }) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono uppercase text-steel mb-1">Icon Reference</label>
-                  <select
+                  <input
+                    placeholder="Scissors, CircleDot, HardHat, Wrench"
                     value={editing.icon_name || "Scissors"}
                     onChange={(e) => setEditing({ ...editing, icon_name: e.target.value })}
                     className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
-                  >
-                    <option value="Scissors">Scissors (Wall/Slab Sawing)</option>
-                    <option value="CircleDot">CircleDot (Core Drilling)</option>
-                    <option value="HardHat">HardHat (Demolition)</option>
-                    <option value="Wrench">Wrench (Property Services)</option>
-                  </select>
+                  />
+                  {editing.icon_name && !["Scissors", "CircleDot", "HardHat", "Wrench"].includes(editing.icon_name) && (
+                    <p className="mt-1 text-xs font-medium text-orange-hover">
+                      ⚠️ Unrecognized icon name (&quot;{editing.icon_name}&quot;) — will display as default (Scissors)
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-mono uppercase text-steel mb-1">Optional Image URL</label>

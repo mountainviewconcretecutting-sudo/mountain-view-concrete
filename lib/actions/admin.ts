@@ -60,6 +60,13 @@ export async function updateTestimonialStatus(
   revalidatePath("/");
 }
 
+const imagePathOrUrlSchema = z
+  .string()
+  .refine(
+    (val) => val === "" || val.startsWith("/") || /^https?:\/\//i.test(val),
+    { message: "Must be a valid URL (http/https) or local path starting with '/'" }
+  );
+
 const projectSchema = z.object({
   title: z.string().min(2).max(150),
   category: z.enum(["residential", "commercial", "industrial"]),
@@ -72,7 +79,7 @@ const projectSchema = z.object({
     "other",
   ]),
   summary: z.string().min(10).max(500),
-  image_url: z.string().url(),
+  image_url: imagePathOrUrlSchema,
   location: z.string().max(150).optional(),
   is_featured: z.boolean(),
   sort_order: z.coerce.number().int().min(0),
@@ -120,7 +127,7 @@ const postSchema = z.object({
   title: z.string().min(2, "Title is required").max(200),
   slug: z.string().min(2, "Slug is required").max(200),
   body: z.string().min(5, "Body content is required"),
-  cover_image_url: z.string().url().optional().nullable().or(z.literal("")),
+  cover_image_url: imagePathOrUrlSchema.optional().nullable(),
   is_published: z.boolean(),
 });
 
@@ -206,7 +213,7 @@ const serviceSchema = z.object({
   description: z.string().min(5, "Description is required"),
   spec_list: z.array(z.string()).optional().nullable(),
   icon_name: z.string().optional().nullable(),
-  image_url: z.string().url().optional().nullable().or(z.literal("")),
+  image_url: imagePathOrUrlSchema.optional().nullable(),
   display_order: z.coerce.number().int().min(0).default(0),
 });
 
@@ -263,7 +270,7 @@ const equipmentSchema = z.object({
   name: z.string().min(2, "Name is required").max(150),
   description: z.string().optional().nullable(),
   specs: z.array(z.string()).optional().nullable(),
-  image_url: z.string().url().optional().nullable().or(z.literal("")),
+  image_url: imagePathOrUrlSchema.optional().nullable(),
   display_order: z.coerce.number().int().min(0).default(0),
 });
 

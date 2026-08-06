@@ -8,6 +8,19 @@ export const metadata: Metadata = {
     "Call, email, or request a quote from Mountain View Concrete Cutting Inc. Serving Calgary and Western Alberta, 24/7.",
 };
 
+const SERVICE_COMMUNITIES = [
+  "Calgary",
+  "Airdrie",
+  "Okotoks",
+  "Chestermere",
+  "Cochrane",
+  "High River",
+  "Strathmore",
+  "Canmore",
+  "Banff",
+  "Red Deer & Region",
+];
+
 export default function ContactPage() {
   return (
     <>
@@ -55,6 +68,21 @@ export default function ContactPage() {
                 </div>
               </li>
             </ul>
+
+            <div className="mt-8 rounded-sm border border-steel-light/30 bg-white p-6">
+              <p className="eyebrow">Service Coverage Area</p>
+              <h3 className="mt-1 text-base font-medium text-charcoal">Calgary &amp; Western Alberta</h3>
+              <p className="mt-2 text-xs text-steel leading-relaxed">
+                We dispatch mobile concrete cutting crews across Calgary and surrounding communities:
+              </p>
+              <ul className="mt-3 grid grid-cols-2 gap-1.5 text-xs text-steel font-mono">
+                {SERVICE_COMMUNITIES.map((city) => (
+                  <li key={city} className="flex items-center gap-1">
+                    <span className="text-orange">▪</span> {city}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="md:col-span-3">

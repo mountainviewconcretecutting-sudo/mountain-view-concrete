@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Scissors, CircleDot, HardHat, Wrench, WrenchIcon } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { getServices, getEquipment } from "@/lib/actions/services";
 
 export const dynamic = "force-dynamic";
@@ -93,11 +94,15 @@ export default async function ServicesPage() {
               >
                 <div>
                   {item.image_url ? (
-                    <img
-                      src={item.image_url}
-                      alt={item.name}
-                      className="mb-4 h-36 w-full rounded-sm border border-steel-light/30 object-cover"
-                    />
+                    <div className="relative mb-4 h-36 w-full overflow-hidden rounded-sm border border-steel-light/30">
+                      <ImageWithFallback
+                        src={item.image_url}
+                        alt={item.name}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
                   ) : null}
                   <h3 className="text-lg font-medium text-charcoal">{item.name}</h3>
                   {item.description && (
