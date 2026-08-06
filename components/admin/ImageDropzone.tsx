@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, useEffect, DragEvent, ChangeEvent } from "react";
 import { Upload, Loader2, CheckCircle2, AlertCircle, Image as ImageIcon } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -23,6 +23,11 @@ export function ImageDropzone({
   const [previewUrl, setPreviewUrl] = useState<string>(currentUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Sync previewUrl state whenever currentUrl prop changes (e.g. manual typing or switching items)
+  useEffect(() => {
+    setPreviewUrl(currentUrl);
+  }, [currentUrl]);
+
   const handleUpload = async (file: File) => {
     // 1. Validate file type
     if (!file.type.startsWith("image/")) {
@@ -40,7 +45,7 @@ export function ImageDropzone({
 
     try {
       const supabase = createSupabaseBrowserClient();
-      const fileExt = file.name.split(".").pop();
+      const fileExt = file.name.split(".").pop() || "jpg";
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
       const filePath = `uploads/${fileName}`;
 
@@ -64,11 +69,16 @@ export function ImageDropzone({
       setError(msg);
     } finally {
       setIsUploading(false);
+      // Reset input value so re-selecting the same file triggers onChange
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleUpload(e.dataTransfer.files[0]);
@@ -84,9 +94,14 @@ export function ImageDropzone({
       <div
         onDragOver={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           setIsDragging(true);
         }}
-        onDragLeave={() => setIsDragging(false)}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsDragging(false);
+        }}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center p-5 border-2 border-dashed rounded-none cursor-pointer transition-colors ${
@@ -106,19 +121,18 @@ export function ImageDropzone({
         />
 
         {isUploading ? (
-          <div className="flex flex-col items-center py-2 text-orange-500">
+          <div className="flex flex-col items-center py-2 text-orange-500 pointer-events-none">
             <Loader2 className="w-7 h-7 animate-spin mb-2" />
             <span className="text-xs font-bold uppercase tracking-wider">Uploading to Supabase Storage...</span>
           </div>
         ) : previewUrl ? (
-          <div className="flex items-center space-x-4 w-full">
+          <div className="flex items-center space-x-4 w-full pointer-events-none">
             <div className="relative w-16 h-16 bg-slate-900 border border-slate-700 overflow-hidden flex-shrink-0 flex items-center justify-center">
               <img
                 src={previewUrl}
                 alt="Uploaded preview"
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  // Fallback icon if image URL fails to load
                   (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
@@ -133,7 +147,7 @@ export function ImageDropzone({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center py-2 text-slate-400 text-center">
+          <div className="flex flex-col items-center py-2 text-slate-400 text-center pointer-events-none">
             <Upload className="w-7 h-7 mb-2 text-orange-500" />
             <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
               Drag & drop image here, or <span className="text-orange-500 underline">browse</span>
