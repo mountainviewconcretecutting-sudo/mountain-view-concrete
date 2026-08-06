@@ -51,7 +51,11 @@ export const metadata: Metadata = {
     locale: "en_CA",
     type: "website",
   },
-  icons: { icon: "/favicon.ico" },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export const viewport: Viewport = {
