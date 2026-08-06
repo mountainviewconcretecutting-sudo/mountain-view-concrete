@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ImageOff } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/types";
 
@@ -58,7 +58,7 @@ export default async function FeaturedProjectsPreview() {
             {projects.map((project) => (
               <article key={project.id} className="group overflow-hidden rounded-sm bg-white shadow-sm">
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-steel-light/20">
-                  <Image
+                  <ImageWithFallback
                     src={project.image_url}
                     alt={project.title}
                     fill

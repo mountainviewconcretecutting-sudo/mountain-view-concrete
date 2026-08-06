@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, Plus, ImageOff } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { upsertEquipment, deleteEquipment } from "@/lib/actions/admin";
 import type { Equipment } from "@/lib/types";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 const EMPTY: Omit<Equipment, "id" | "created_at" | "updated_at"> = {
   name: "",
@@ -93,11 +95,17 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
             </div>
 
             {item.image_url ? (
-              <img
-                src={item.image_url}
-                alt={item.name}
-                className="mt-3 h-32 w-full rounded-sm object-cover border border-steel-light/20"
-              />
+              <div className="relative mt-3 h-32 w-full overflow-hidden rounded-sm border border-steel-light/20">
+                <ImageWithFallback
+                  src={item.image_url}
+                  alt={item.name}
+                  fill
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                  className="object-cover"
+                  fallbackText="No Image Provided"
+                  iconSize={16}
+                />
+              </div>
             ) : (
               <div className="mt-3 flex h-24 w-full items-center justify-center rounded-sm bg-fog text-steel border border-steel-light/20">
                 <div className="flex items-center gap-1.5 text-xs">
@@ -174,12 +182,16 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Image URL (Optional)</label>
+                <ImageDropzone
+                  currentUrl={editing.image_url || ""}
+                  onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
+                  label="Equipment Photo (Drag & Drop to Upload)"
+                />
                 <input
-                  placeholder="https://..."
+                  placeholder="Or enter Image URL manually"
                   value={editing.image_url || ""}
                   onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
                 />
               </div>
 

@@ -51,7 +51,11 @@ export const metadata: Metadata = {
     locale: "en_CA",
     type: "website",
   },
-  icons: { icon: "/favicon.ico" },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -87,15 +91,64 @@ export default async function RootLayout({
     `--color-charcoal-hard: ${hexToRgbChannels(theme.color_charcoal_hard ?? "#141516")};`,
   ].join("\n    ");
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "GeneralContractor"],
+    name: "Mountain View Concrete Cutting Inc.",
+    legalName: "2549952 Alberta Inc.",
+    url: SITE_URL,
+    telephone: "825-734-1419",
+    email: "crafuse0@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "3904 3A Street NE",
+      addressLocality: "Calgary",
+      addressRegion: "AB",
+      postalCode: "T2E 6R4",
+      addressCountry: "CA",
+    },
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "Calgary" },
+      { "@type": "AdministrativeArea", name: "Airdrie" },
+      { "@type": "AdministrativeArea", name: "Okotoks" },
+      { "@type": "AdministrativeArea", name: "Chestermere" },
+      { "@type": "AdministrativeArea", name: "Cochrane" },
+      { "@type": "AdministrativeArea", name: "Western Alberta" },
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "emergency",
+      telephone: "825-734-1419",
+      hoursAvailable: {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        opens: "00:00",
+        closes: "23:59",
+      },
+      areaServed: "Calgary and Western Alberta",
+      availableLanguage: "English",
+    },
+    knowsAbout: [
+      "Wall Sawing",
+      "Slab Sawing",
+      "Core Drilling",
+      "Concrete Demolition & Removal",
+    ],
+  };
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Theme CSS custom properties — sourced from theme_settings table.
-            Defaults are baked into getThemeSettings() so this always renders
-            valid values even if the DB is empty or unreachable. */}
+        {/* Theme CSS custom properties — sourced from theme_settings table */}
         <style dangerouslySetInnerHTML={{ __html: `:root {\n    ${cssVars}\n  }` }} />
+        {/* LocalBusiness / GeneralContractor JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body
+        suppressHydrationWarning
         className={`${oswald.variable} ${workSans.variable} ${jetbrainsMono.variable} font-body`}
       >
         <EditModeProvider isAdmin={isAdmin}>

@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus } from "lucide-react";
 import { upsertProject, deleteProject } from "@/lib/actions/admin";
 import type { Project, ProjectCategory, ServiceType } from "@/lib/types";
 import { SERVICE_TYPE_LABELS } from "@/lib/types";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 const EMPTY: Omit<Project, "id" | "created_at"> = {
   title: "",
@@ -126,11 +127,16 @@ export default function ProjectsManager({ projects }: { projects: Project[] }) {
                 onChange={(e) => setEditing({ ...editing, summary: e.target.value })}
                 className="rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
               />
+              <ImageDropzone
+                currentUrl={editing.image_url}
+                onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
+                label="Project Image (Drag & Drop to Upload)"
+              />
               <input
-                placeholder="Image URL (Supabase Storage public URL)"
+                placeholder="Or enter Image URL manually"
                 value={editing.image_url}
                 onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                className="rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                className="rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs"
               />
               <label className="flex items-center gap-2 text-sm text-charcoal">
                 <input
