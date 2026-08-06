@@ -4,6 +4,34 @@ import { z } from "zod";
 import { createSupabaseServerClient, createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import type { ActionResult, CommentFormValues } from "@/lib/types";
 
+/**
+ * Returns true only for genuine transport/connectivity failures.
+ * Postgres errors (RLS violations, constraint failures, etc.) and any other
+ * database-level rejection must NOT trigger a service-role retry because that
+ * would silently bypass RLS for non-network reasons.
+ */
+function isConnectionError(error: unknown): boolean {
+  // Handle both Error instances and plain objects (e.g. Supabase PostgrestError)
+  let msg = "";
+  if (error instanceof Error) {
+    msg = error.message;
+  } else if (error !== null && typeof error === "object" && "message" in error) {
+    msg = String((error as { message: unknown }).message);
+  }
+  const m = msg.toLowerCase();
+  return (
+    m.includes("fetch failed") ||
+    m.includes("failed to fetch") ||
+    m.includes("econnrefused") ||
+    m.includes("etimedout") ||
+    m.includes("socket hang up") ||
+    m.includes("network error") ||
+    // "connection" covers: connection refused, connection reset, etc.
+    // Exclude "row level security" and other postgres phrases that can't match.
+    (m.includes("connection") && !m.includes("policy"))
+  );
+}
+
 const commentSchema = z
   .object({
     authorName: z
@@ -32,6 +60,9 @@ const commentSchema = z
  * - Validates input with Zod.
  * - Honeypot field (`companyWebsite`) silently absorbs bot submissions.
  * - Inserts comment into database with default status 'pending'.
+ * - Service-role fallback only fires on genuine connection/network failures.
+ *   Any Postgres, RLS, or unexpected DB error returns a normal failure
+ *   without retrying under elevated privileges.
  */
 export async function submitComment(
   values: CommentFormValues
@@ -65,8 +96,12 @@ export async function submitComment(
     let supabase;
     try {
       supabase = await createSupabaseServerClient();
-    } catch {
-      supabase = createSupabaseServiceRoleClient();
+    } catch (err) {
+      if (isConnectionError(err)) {
+        supabase = createSupabaseServiceRoleClient();
+      } else {
+        throw err;
+      }
     }
 
     const { error } = await supabase.from("comments").insert({
@@ -77,9 +112,8 @@ export async function submitComment(
       status: "pending",
     });
 
-    if (error) {
-      console.error("Supabase comment insert error:", error.message);
-      // Retry with service role client if standard client fails
+    if (error && isConnectionError(error)) {
+      console.error("Supabase connection error:", error.message);
       const serviceSupabase = createSupabaseServiceRoleClient();
       const { error: retryErr } = await serviceSupabase.from("comments").insert({
         author_name: authorName,
@@ -96,6 +130,12 @@ export async function submitComment(
           message: "Could not submit comment at this time. Please try again later.",
         };
       }
+    } else if (error) {
+      console.error("Supabase comment insert error:", error.message);
+      return {
+        success: false,
+        message: "Could not submit comment at this time. Please try again later.",
+      };
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
