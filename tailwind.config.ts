@@ -13,10 +13,33 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        aggregate: {
+          DEFAULT: "#1B1E22", // Cured Concrete Aggregate — dark mineral base
+          deep: "#111316",
+        },
+        slurry: {
+          DEFAULT: "#4A5057", // Wet Concrete Slurry — mid-tone mineral grey
+          light: "#606770",
+        },
+        steel: {
+          DEFAULT: "#9BA3AF", // Structural Steel Grey — metal machinery
+          light: "#CBD1D9",
+          dark: "#5B6266",
+        },
+        flame: {
+          DEFAULT: "#FF5500", // Blade Flame Orange — STIHL/Husqvarna safety orange
+          hover: "#E04B00",
+          soft: "#3A1A0D",
+        },
+        ochre: {
+          DEFAULT: "#D99B00", // Hazard Ochre — equipment safety yellow
+          soft: "#332600",
+        },
+        chalk: {
+          DEFAULT: "#F1F3F5", // Snap Chalk White — layout line contrast
+          muted: "#A0A7B0",
+        },
         charcoal: {
-          // Values are CSS custom properties injected by RootLayout from theme_settings.
-          // rgb(.../<alpha-value>) syntax is required for Tailwind opacity modifiers
-          // (e.g. charcoal/95, bg-charcoal/10) to work correctly with CSS variables.
           DEFAULT: "rgb(var(--color-charcoal) / <alpha-value>)",
           soft: "rgb(var(--color-charcoal-soft) / <alpha-value>)",
           hard: "rgb(var(--color-charcoal-hard) / <alpha-value>)",
@@ -27,22 +50,21 @@ const config: Config = {
           soft: "rgb(var(--color-orange-soft) / <alpha-value>)",
         },
         mtnGreen: {
-          DEFAULT: "#2D5A27", // Mountain Green — secondary accent
+          DEFAULT: "#2D5A27",
           soft: "#E7EFE5",
         },
-        fog: "#F5F5F2", // crisp light background
-        steel: {
-          DEFAULT: "#5B6266", // mid-gray for secondary text / borders
-          light: "#9AA0A3",
-        },
+        fog: "#F5F5F2",
       },
       fontFamily: {
-        // Display: condensed, industrial, stencil-adjacent — signage voice
-        display: ["var(--font-oswald)", "Impact", "sans-serif"],
-        // Body: clean geometric grotesk — readability workhorse
-        body: ["var(--font-worksans)", "system-ui", "sans-serif"],
-        // Utility/data: monospace — spec sheets, measurements, blueprint feel
-        mono: ["var(--font-jetbrains)", "monospace"],
+        display: ["var(--font-teko)", "var(--font-oswald)", "Impact", "sans-serif"],
+        body: ["var(--font-barlow)", "var(--font-worksans)", "system-ui", "sans-serif"],
+        tech: ["var(--font-chakra)", "var(--font-jetbrains)", "monospace"],
+        mono: ["var(--font-chakra)", "var(--font-jetbrains)", "monospace"],
+      },
+      boxShadow: {
+        heavy: "6px 6px 0px #0F1115",
+        "heavy-sm": "3px 3px 0px #0F1115",
+        "heavy-flame": "4px 4px 0px #FF5500",
       },
       keyframes: {
         sawCut: {

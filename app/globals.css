@@ -7,14 +7,14 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-fog text-charcoal font-body antialiased;
+    @apply bg-aggregate text-chalk font-body antialiased selection:bg-flame selection:text-white;
   }
   h1, h2, h3, h4 {
     @apply font-display uppercase tracking-wide;
   }
   :focus-visible {
-    outline: 3px solid rgb(var(--color-orange));
-    outline-offset: 2px;
+    outline: 2px solid #FF5500 !important;
+    outline-offset: 2px !important;
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -27,13 +27,12 @@
 }
 
 @layer components {
-  /*
-   * SIGNATURE MOTIF — the "cut line".
-   * Every major section boundary on the site is a diagonal blade-cut rather
-   * than a straight edge, echoing the company's actual trade (concrete
-   * sawing). Applied via a clip-path on the section that sits BELOW the
-   * divider, so the section above appears to have been sliced into it.
-   */
+  /* Decorative chamfer top-right wrapper (used ONLY on non-interactive wrappers) */
+  .chamfer-top-right {
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+
+  /* Structural industrial cut-below section divider */
   .cut-below {
     clip-path: polygon(0 3.2vw, 100% 0, 100% 100%, 0 100%);
   }
@@ -41,38 +40,31 @@
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.2vw));
   }
 
-  /* Thin animated blade line used once, in the hero, on load */
-  .blade-line {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgb(var(--color-orange) / 0.9) 45%,
-      rgb(var(--color-orange) / 0.9) 55%,
-      transparent 100%
-    );
-    width: 40%;
-    filter: blur(0.5px);
+  /* Heavy responsive industrial drop shadow */
+  .industrial-card {
+    @apply border-2 border-slurry/40 bg-aggregate-deep p-6 text-chalk
+           shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]
+           transition-all duration-150;
   }
 
   .container-page {
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
   }
 
+  /* Heavy-duty primary CTA (wraps inside non-interactive decorative container if chamfered) */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-orange px-6 py-3.5
-           font-display text-sm uppercase tracking-wider text-white shadow-sm transition-colors
-           hover:bg-orange-hover focus-visible:outline-offset-2;
+    @apply inline-flex items-center justify-center gap-2.5 bg-flame px-6 py-3.5
+           font-display text-base uppercase tracking-wider text-white shadow-[3px_3px_0px_#0F1115]
+           transition-colors hover:bg-flame-hover active:translate-x-[1px] active:translate-y-[1px];
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-charcoal px-6 py-3
-           font-display text-sm uppercase tracking-wider text-charcoal transition-colors
-           hover:bg-charcoal hover:text-white;
+    @apply inline-flex items-center justify-center gap-2.5 border-2 border-steel-light/60 bg-slurry/40 px-6 py-3
+           font-display text-base uppercase tracking-wider text-chalk transition-colors
+           hover:border-flame hover:bg-slurry/80 hover:text-white;
   }
 
   .eyebrow {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-orange;
+    @apply font-tech text-xs uppercase tracking-[0.2em] text-flame font-bold;
   }
 }

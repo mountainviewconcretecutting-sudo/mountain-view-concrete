@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import EditableText from "@/components/edit-mode/EditableText";
 import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
+import { Check } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -26,40 +27,78 @@ export default async function AboutPage() {
 
   return (
     <>
-      <section className="cut-above bg-charcoal py-20 pb-28 text-white md:py-28 md:pb-36">
+      <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
         <div className="container-page">
-          <p className="eyebrow">About Us</p>
-          <h1 className="mt-2 max-w-2xl text-4xl md:text-5xl">
-            Built on hard work, reliability, and craftsmanship.
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// ABOUT US"}
+          </span>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
+            BUILT ON HARD WORK, RELIABILITY, AND CRAFTSMANSHIP.
           </h1>
         </div>
       </section>
 
-      <section className="bg-fog py-16 md:py-20">
+      <section className="bg-aggregate py-16 md:py-24 border-b-2 border-slurry/40">
         <div className="container-page grid grid-cols-1 gap-12 md:grid-cols-2">
-          <div>
-            <h2 className="text-2xl text-charcoal">Our Story</h2>
-            <EditableText
-              contentKey="about_story"
-              initialValue={content.about_story}
-              isAdmin={isAdmin}
-              multiline={true}
-            />
+          <div className="border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]">
+            <span className="font-tech text-xs font-bold uppercase tracking-widest text-flame">
+              {"// COMPANY HISTORY"}
+            </span>
+            <h2 className="mt-1 font-display text-3xl uppercase tracking-wide text-chalk">OUR STORY</h2>
+            <div className="mt-4 font-body text-base leading-relaxed text-steel-light">
+              <EditableText
+                contentKey="about_story"
+                initialValue={content.about_story}
+                isAdmin={isAdmin}
+                multiline={true}
+              />
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl text-charcoal">Our Mission</h2>
-            <EditableText
-              contentKey="about_mission"
-              initialValue={content.about_mission}
-              isAdmin={isAdmin}
-              multiline={true}
-            />
-            <ul className="mt-6 flex flex-col gap-3 text-sm text-charcoal">
-              <li className="flex gap-2"><span className="text-orange">✔</span> 25+ years of hands-on industry experience</li>
-              <li className="flex gap-2"><span className="text-orange">✔</span> Professional-grade cutting, drilling, and demolition equipment</li>
-              <li className="flex gap-2"><span className="text-orange">✔</span> Residential, commercial, and industrial project experience</li>
-              <li className="flex gap-2"><span className="text-orange">✔</span> Reliable, efficient service with clear communication</li>
-              <li className="flex gap-2"><span className="text-orange">✔</span> 24/7 emergency availability</li>
+
+          <div className="border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]">
+            <span className="font-tech text-xs font-bold uppercase tracking-widest text-flame">
+              {"// OUR COMMITMENT"}
+            </span>
+            <h2 className="mt-1 font-display text-3xl uppercase tracking-wide text-chalk">OUR MISSION</h2>
+            <div className="mt-4 font-body text-base leading-relaxed text-steel-light">
+              <EditableText
+                contentKey="about_mission"
+                initialValue={content.about_mission}
+                isAdmin={isAdmin}
+                multiline={true}
+              />
+            </div>
+            <ul className="mt-6 flex flex-col gap-3 font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+              <li className="flex items-center gap-2.5">
+                <span className="flex h-5 w-5 items-center justify-center bg-flame/10 text-flame border border-flame/40">
+                  <Check size={14} />
+                </span>
+                25+ years of hands-on industry experience
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="flex h-5 w-5 items-center justify-center bg-flame/10 text-flame border border-flame/40">
+                  <Check size={14} />
+                </span>
+                Professional-grade cutting, drilling, and demolition equipment
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="flex h-5 w-5 items-center justify-center bg-flame/10 text-flame border border-flame/40">
+                  <Check size={14} />
+                </span>
+                Residential, commercial, and industrial project experience
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="flex h-5 w-5 items-center justify-center bg-flame/10 text-flame border border-flame/40">
+                  <Check size={14} />
+                </span>
+                Reliable, efficient service with clear communication
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="flex h-5 w-5 items-center justify-center bg-ochre/10 text-ochre border border-ochre/40">
+                  <Check size={14} />
+                </span>
+                24/7 emergency availability across Western Canada
+              </li>
             </ul>
           </div>
         </div>

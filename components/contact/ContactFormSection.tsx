@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { submitQuote } from "@/lib/actions/submitQuote";
 import { SERVICE_TYPE_LABELS, type QuoteFormValues } from "@/lib/types";
 
@@ -43,11 +43,11 @@ export default function ContactFormSection() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-sm border border-steel-light/30 bg-white p-10 text-center">
-        <CheckCircle2 size={40} className="text-mtnGreen" aria-hidden="true" />
-        <p className="font-display text-lg uppercase text-charcoal">Request Received</p>
-        <p className="max-w-sm text-sm text-steel">{message}</p>
-        <button type="button" onClick={() => setStatus("idle")} className="btn-secondary mt-2">
+      <div className="flex flex-col items-center gap-3 border-2 border-slurry/50 bg-aggregate-deep p-10 text-center text-chalk shadow-[6px_6px_0px_#0F1115]">
+        <CheckCircle2 size={44} className="text-ochre" aria-hidden="true" />
+        <p className="font-display text-2xl uppercase tracking-wide text-chalk">Request Received</p>
+        <p className="max-w-sm font-body text-sm text-steel-light">{message}</p>
+        <button type="button" onClick={() => setStatus("idle")} className="btn-secondary mt-4">
           Submit another request
         </button>
       </div>
@@ -55,8 +55,11 @@ export default function ContactFormSection() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="rounded-sm border border-steel-light/30 bg-white p-6">
-      <h2 className="font-display text-lg uppercase tracking-wide text-charcoal">Request a Quote</h2>
+    <form onSubmit={handleSubmit} noValidate className="border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]">
+      <span className="font-tech text-xs font-bold uppercase tracking-[0.2em] text-flame">
+        {"// ONLINE INQUIRY"}
+      </span>
+      <h2 className="font-display text-3xl uppercase tracking-wide text-chalk">REQUEST A QUOTE</h2>
 
       <div className="mt-2 hidden" aria-hidden="true">
         <label htmlFor="companyWebsite">Company website</label>
@@ -69,7 +72,7 @@ export default function ContactFormSection() {
         />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Full name" error={errors.name}>
           <input
             required
@@ -104,7 +107,7 @@ export default function ContactFormSection() {
             className={inputClass(!!errors.serviceType)}
           >
             {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
+              <option key={value} value={value} className="bg-aggregate text-chalk">
                 {label}
               </option>
             ))}
@@ -136,18 +139,20 @@ export default function ContactFormSection() {
       </div>
 
       {status === "error" && message && (
-        <p role="alert" className="mt-4 rounded-sm bg-orange-soft px-3 py-2 text-sm text-orange-hover">
+        <p role="alert" className="mt-4 border border-flame bg-flame/10 p-3 font-tech text-xs text-flame font-bold">
           {message}
         </p>
       )}
 
-      <button type="submit" disabled={status === "submitting"} className="btn-primary mt-5 disabled:opacity-70">
+      <button type="submit" disabled={status === "submitting"} className="btn-primary mt-6 justify-center text-lg disabled:opacity-70">
         {status === "submitting" ? (
           <>
-            <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Sending...
+            <Loader2 size={18} className="animate-spin" aria-hidden="true" /> Sending...
           </>
         ) : (
-          "Submit Request"
+          <>
+            <Send size={18} aria-hidden="true" /> Submit Quote Request
+          </>
         )}
       </button>
     </form>
@@ -155,17 +160,17 @@ export default function ContactFormSection() {
 }
 
 function inputClass(hasError: boolean) {
-  return `w-full rounded-sm border bg-white px-3 py-2.5 text-sm text-charcoal shadow-sm
-    focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30
-    ${hasError ? "border-orange-hover" : "border-steel-light/50"}`;
+  return `w-full border-2 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk
+    focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40
+    ${hasError ? "border-flame" : "border-slurry/60"}`;
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-charcoal">{label}</label>
+      <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">{label}</label>
       {children}
-      {error && <p className="mt-1 text-xs font-medium text-orange-hover">{error}</p>}
+      {error && <p className="mt-1 font-tech text-xs font-bold text-flame">{error}</p>}
     </div>
   );
 }

@@ -77,14 +77,18 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <section className="cut-above bg-charcoal py-20 pb-28 text-white md:py-28 md:pb-36">
+      <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
         <div className="container-page">
-          <p className="eyebrow">Recent Work</p>
-          <h1 className="mt-2 max-w-2xl text-4xl md:text-5xl">Featured Projects</h1>
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// RECENT WORK"}
+          </span>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
+            FEATURED PROJECTS
+          </h1>
         </div>
       </section>
 
-      <section className="bg-fog py-16 md:py-20">
+      <section className="bg-aggregate py-16 md:py-20 border-b-2 border-slurry/40">
         <div className="container-page">
           <ProjectsGrid projects={projects} comments={comments} />
         </div>

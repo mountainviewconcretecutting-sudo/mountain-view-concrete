@@ -11,14 +11,17 @@ const BADGES = [
 
 export default function TrustBadges() {
   return (
-    <section className="bg-fog py-10 border-y border-steel-light/20">
-      <div className="container-page grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6 md:gap-4">
+    <section className="border-y-2 border-slurry/40 bg-aggregate py-8">
+      <div className="container-page grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {BADGES.map(({ icon: Icon, label }) => (
-          <div key={label} className="flex flex-col items-center gap-2 text-center md:flex-row md:text-left">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mtnGreen-soft text-mtnGreen">
+          <div
+            key={label}
+            className="flex items-center gap-3 border border-slurry/30 bg-slurry/20 p-3 shadow-[2px_2px_0px_#0F1115]"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-ochre/40 bg-ochre/10 text-ochre">
               <Icon size={18} aria-hidden="true" />
             </span>
-            <span className="font-display text-xs uppercase tracking-wide text-charcoal">
+            <span className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">
               {label}
             </span>
           </div>

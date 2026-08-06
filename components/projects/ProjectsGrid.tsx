@@ -29,7 +29,6 @@ export default function ProjectsGrid({
     [projects, filter]
   );
 
-  // Group comments by project_id
   const commentsByProject = useMemo(() => {
     const map: Record<string, Comment[]> = {};
     for (const c of comments) {
@@ -44,17 +43,17 @@ export default function ProjectsGrid({
 
   return (
     <div>
-      <div role="group" aria-label="Filter projects by category" className="flex flex-wrap gap-2">
+      <div role="group" aria-label="Filter projects by category" className="flex flex-wrap gap-3">
         {FILTERS.map(({ value, label }) => (
           <button
             key={value}
             type="button"
             aria-pressed={filter === value}
             onClick={() => setFilter(value)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+            className={`border-2 px-5 py-2 font-tech text-xs font-bold uppercase tracking-widest transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flame ${
               filter === value
-                ? "border-orange bg-orange text-white"
-                : "border-steel-light/50 bg-white text-charcoal hover:border-orange"
+                ? "border-flame bg-flame text-white shadow-[3px_3px_0px_#0F1115]"
+                : "border-slurry/50 bg-slurry/20 text-chalk hover:border-flame hover:bg-slurry/40"
             }`}
           >
             {label}
@@ -63,7 +62,7 @@ export default function ProjectsGrid({
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-10 rounded-sm border border-dashed border-steel-light/50 bg-white p-10 text-center text-sm text-steel">
+        <p className="mt-10 border-2 border-dashed border-slurry/50 bg-aggregate-deep p-12 text-center font-body text-sm text-steel-light">
           No projects in this category yet.
         </p>
       ) : (
@@ -74,13 +73,13 @@ export default function ProjectsGrid({
             const hasImgError = !project.image_url || imgErrors[project.id];
 
             return (
-              <article key={project.id} className="flex flex-col justify-between overflow-hidden rounded-sm bg-white shadow-sm border border-steel-light/20">
+              <article key={project.id} className="flex flex-col justify-between border-2 border-slurry/50 bg-aggregate-deep shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]">
                 <div>
-                  <div className="relative aspect-[4/3] w-full bg-steel-light/20">
+                  <div className="relative aspect-[4/3] w-full bg-slurry/30 border-b-2 border-slurry/40">
                     {hasImgError ? (
                       <div className="flex h-full w-full flex-col items-center justify-center text-steel">
-                        <ImageOff size={28} className="text-steel-light" aria-hidden="true" />
-                        <span className="mt-1 text-xs">Photo unavailable</span>
+                        <ImageOff size={32} className="text-steel-light" aria-hidden="true" />
+                        <span className="mt-2 font-tech text-xs font-bold uppercase">Photo unavailable</span>
                       </div>
                     ) : (
                       <Image
@@ -93,30 +92,30 @@ export default function ProjectsGrid({
                       />
                     )}
                   </div>
-                  <div className="p-5">
-                    <span className="font-mono text-[11px] uppercase tracking-widest text-orange">
+                  <div className="p-6">
+                    <span className="inline-block border border-flame/40 bg-flame/10 px-2 py-0.5 font-tech text-[10px] font-bold uppercase tracking-widest text-flame mb-2">
                       {project.category}
                     </span>
-                    <h3 className="mt-1 text-lg text-charcoal">{project.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-steel">{project.summary}</p>
+                    <h3 className="font-display text-2xl uppercase tracking-wide text-chalk">{project.title}</h3>
+                    <p className="mt-2 font-body text-sm leading-relaxed text-steel-light">{project.summary}</p>
                     {project.location && (
-                      <p className="mt-3 text-xs uppercase tracking-wide text-steel-light">
-                        {project.location}
+                      <p className="mt-3 font-tech text-xs uppercase tracking-wider text-steel">
+                        LOCATION: {project.location}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="border-t border-steel-light/20 p-5 pt-3">
+                <div className="border-t border-slurry/40 p-6 pt-4">
                   <button
                     type="button"
                     onClick={() =>
                       setActiveCommentProjectId(isCommentsOpen ? null : project.id)
                     }
-                    className="inline-flex items-center gap-1.5 font-display text-xs uppercase tracking-wider text-orange hover:text-orange-hover"
+                    className="inline-flex items-center gap-2 font-tech text-xs font-bold uppercase tracking-wider text-flame hover:underline"
                   >
-                    <MessageSquare size={14} /> Comments ({projectComments.length})
-                    {isCommentsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    <MessageSquare size={16} /> Comments ({projectComments.length})
+                    {isCommentsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
 
                   {isCommentsOpen && (
@@ -135,4 +134,3 @@ export default function ProjectsGrid({
     </div>
   );
 }
-

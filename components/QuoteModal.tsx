@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { X, CheckCircle2, Loader2 } from "lucide-react";
+import { X, CheckCircle2, Loader2, Send } from "lucide-react";
 import { submitQuote } from "@/lib/actions/submitQuote";
 import { SERVICE_TYPE_LABELS, type QuoteFormValues, type ServiceType } from "@/lib/types";
 
@@ -32,7 +32,6 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
-  // Close on Escape, trap focus within the dialog while open.
   useEffect(() => {
     if (!open) return;
     firstFieldRef.current?.focus();
@@ -92,7 +91,6 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
 
   function handleClose() {
     onClose();
-    // Reset success/error state after the close animation would run.
     setTimeout(() => {
       setStatus("idle");
       setStatusMessage("");
@@ -101,7 +99,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal-hard/70 p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-aggregate-deep/85 backdrop-blur-xs p-4"
       role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
@@ -112,34 +110,38 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
         role="dialog"
         aria-modal="true"
         aria-labelledby="quote-modal-title"
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-sm bg-white shadow-xl"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto border-2 border-slurry/60 bg-aggregate-deep shadow-[6px_6px_0px_#0F1115] text-chalk"
       >
-        <div className="flex items-center justify-between border-b border-steel-light/30 px-6 py-4">
-          <h2 id="quote-modal-title" className="font-display text-xl uppercase tracking-wide text-charcoal">
-            Request a Quote
-          </h2>
+        <div className="flex items-center justify-between border-b-2 border-slurry/40 px-6 py-4 bg-aggregate">
+          <div>
+            <span className="font-tech text-[10px] font-bold uppercase tracking-[0.2em] text-flame">
+              {"// PROJECT INQUIRY"}
+            </span>
+            <h2 id="quote-modal-title" className="font-display text-2xl uppercase tracking-wide text-chalk leading-tight">
+              REQUEST A QUOTE
+            </h2>
+          </div>
           <button
             type="button"
             onClick={handleClose}
             aria-label="Close dialog"
-            className="rounded p-1 text-steel hover:bg-fog hover:text-charcoal"
+            className="flex h-9 w-9 items-center justify-center border border-slurry/50 bg-slurry/20 text-steel-light hover:border-flame hover:text-flame transition-colors"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
 
         {status === "success" ? (
           <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
-            <CheckCircle2 size={44} className="text-mtnGreen" aria-hidden="true" />
-            <p className="font-display text-lg uppercase text-charcoal">Request Received</p>
-            <p className="max-w-sm text-sm text-steel">{statusMessage}</p>
-            <button type="button" onClick={handleClose} className="btn-secondary mt-2">
+            <CheckCircle2 size={48} className="text-ochre" aria-hidden="true" />
+            <p className="font-display text-2xl uppercase tracking-wide text-chalk">Request Received</p>
+            <p className="max-w-sm font-body text-sm text-steel-light">{statusMessage}</p>
+            <button type="button" onClick={handleClose} className="btn-secondary mt-4">
               Close
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 px-6 py-6">
-            {/* Honeypot — hidden from real users, visible to bots that fill every field */}
             <div className="hidden" aria-hidden="true">
               <label htmlFor="companyWebsite">Company website</label>
               <input
@@ -153,7 +155,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
               />
             </div>
 
-            <Field label="Full name" htmlFor="name" error={errors.name} required>
+            <Field label="Full Name" htmlFor="name" error={errors.name} required>
               <input
                 ref={firstFieldRef}
                 id="name"
@@ -167,7 +169,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
             </Field>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field label="Phone" htmlFor="phone" error={errors.phone} required>
+              <Field label="Phone Number" htmlFor="phone" error={errors.phone} required>
                 <input
                   id="phone"
                   type="tel"
@@ -178,7 +180,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
                   className={inputClass(!!errors.phone)}
                 />
               </Field>
-              <Field label="Email" htmlFor="email" error={errors.email} required>
+              <Field label="Email Address" htmlFor="email" error={errors.email} required>
                 <input
                   id="email"
                   type="email"
@@ -191,7 +193,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
               </Field>
             </div>
 
-            <Field label="Service type" htmlFor="serviceType" error={errors.serviceType} required>
+            <Field label="Service Required" htmlFor="serviceType" error={errors.serviceType} required>
               <select
                 id="serviceType"
                 required
@@ -200,7 +202,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
                 className={inputClass(!!errors.serviceType)}
               >
                 {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
+                  <option key={value} value={value} className="bg-aggregate text-chalk">
                     {label}
                   </option>
                 ))}
@@ -208,7 +210,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
             </Field>
 
             <Field
-              label="Project description"
+              label="Project Details & Scope"
               htmlFor="projectDescription"
               error={errors.projectDescription}
               required
@@ -217,14 +219,14 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
                 id="projectDescription"
                 required
                 rows={4}
-                placeholder="Tell us about the job: location, concrete thickness, timeline, access constraints..."
+                placeholder="Job location, concrete depth/thickness, timeline, site access constraints..."
                 value={values.projectDescription}
                 onChange={(e) => updateField("projectDescription", e.target.value)}
                 className={inputClass(!!errors.projectDescription)}
               />
             </Field>
 
-            <Field label="Preferred date (optional)" htmlFor="preferredDate" error={errors.preferredDate}>
+            <Field label="Preferred Date (Optional)" htmlFor="preferredDate" error={errors.preferredDate}>
               <input
                 id="preferredDate"
                 type="date"
@@ -235,23 +237,25 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
             </Field>
 
             {status === "error" && statusMessage && (
-              <p role="alert" className="rounded-sm bg-orange-soft px-3 py-2 text-sm text-orange-hover">
+              <p role="alert" className="border border-flame bg-flame/10 p-3 font-tech text-xs text-flame font-bold">
                 {statusMessage}
               </p>
             )}
 
-            <button type="submit" disabled={status === "submitting"} className="btn-primary mt-2 disabled:opacity-70">
+            <button type="submit" disabled={status === "submitting"} className="btn-primary mt-2 justify-center text-lg disabled:opacity-70">
               {status === "submitting" ? (
                 <>
-                  <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Sending...
+                  <Loader2 size={18} className="animate-spin" aria-hidden="true" /> Sending...
                 </>
               ) : (
-                "Submit Request"
+                <>
+                  <Send size={18} aria-hidden="true" /> Submit Quote Request
+                </>
               )}
             </button>
-            <p className="text-center text-xs text-steel">
-              Prefer to talk now?{" "}
-              <a href="tel:8257341419" className="font-medium text-orange underline">
+            <p className="text-center font-tech text-xs text-steel-light mt-1">
+              Need immediate emergency service?{" "}
+              <a href="tel:8257341419" className="font-bold text-flame underline">
                 Call 825-734-1419
               </a>
             </p>
@@ -263,9 +267,9 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
 }
 
 function inputClass(hasError: boolean) {
-  return `w-full rounded-sm border bg-white px-3 py-2.5 text-sm text-charcoal shadow-sm
-    focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30
-    ${hasError ? "border-orange-hover" : "border-steel-light/50"}`;
+  return `w-full border-2 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk
+    focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40
+    ${hasError ? "border-flame" : "border-slurry/60"}`;
 }
 
 function Field({
@@ -283,12 +287,12 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-charcoal">
-        {label} {required && <span className="text-orange">*</span>}
+      <label htmlFor={htmlFor} className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+        {label} {required && <span className="text-flame">*</span>}
       </label>
       {children}
       {error && (
-        <p role="alert" className="mt-1 text-xs font-medium text-orange-hover">
+        <p role="alert" className="mt-1 font-tech text-xs font-bold text-flame">
           {error}
         </p>
       )}

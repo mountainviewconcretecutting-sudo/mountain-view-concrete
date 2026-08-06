@@ -30,23 +30,31 @@ const SERVICES = [
 
 export default function ServicesPreview() {
   return (
-    <section className="cut-above relative bg-charcoal py-20 text-white md:py-28">
+    <section className="relative bg-aggregate-deep py-20 text-chalk border-b-2 border-slurry/40">
       <div className="container-page">
-        <p className="eyebrow">What We Do</p>
-        <h2 className="mt-2 max-w-xl text-3xl md:text-4xl">Our Core Services</h2>
+        <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+          {"// WHAT WE DO"}
+        </span>
+        <h2 className="mt-2 max-w-xl font-display text-4xl uppercase tracking-tight text-chalk md:text-5xl">
+          OUR CORE SERVICES
+        </h2>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map(({ icon: Icon, title, copy, href }) => (
             <Link
               key={title}
               href={href}
-              className="group flex flex-col rounded-sm border border-white/10 bg-white/5 p-6 transition-colors hover:border-orange/60 hover:bg-white/10"
+              className="group flex flex-col border-2 border-slurry/50 bg-aggregate p-6 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115] transition-all hover:border-flame focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flame"
             >
-              <Icon size={26} className="text-orange" aria-hidden="true" />
-              <h3 className="mt-4 text-lg">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/60">{copy}</p>
-              <span className="mt-4 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-orange">
-                Learn more
+              <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame mb-4">
+                <Icon size={24} aria-hidden="true" />
+              </div>
+              <h3 className="font-display text-2xl uppercase tracking-wide text-chalk group-hover:text-flame transition-colors">
+                {title}
+              </h3>
+              <p className="mt-2 font-body text-sm leading-relaxed text-steel-light">{copy}</p>
+              <span className="mt-6 inline-flex items-center gap-1.5 font-tech text-xs font-bold uppercase tracking-wider text-flame">
+                Learn Details
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </span>
             </Link>
