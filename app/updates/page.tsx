@@ -8,7 +8,6 @@ import type { Post } from "@/lib/types";
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
-
 export const metadata: Metadata = {
   title: "Company Updates & Announcements",
   description: "Latest news, company announcements, and project highlights from Mountain View Concrete Cutting Inc.",
@@ -39,22 +38,24 @@ export default async function UpdatesPage() {
 
   return (
     <>
-      <section className="cut-above bg-charcoal py-20 pb-28 text-white md:py-28 md:pb-36">
+      <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
         <div className="container-page">
-          <p className="eyebrow">News &amp; Information</p>
-          <h1 className="mt-2 max-w-2xl text-4xl md:text-5xl">
-            Company Updates &amp; Announcements
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// NEWS & ANNOUNCEMENTS"}
+          </span>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
+            COMPANY UPDATES
           </h1>
         </div>
       </section>
 
-      <section className="bg-fog py-16 md:py-20">
+      <section className="bg-aggregate py-16 md:py-20 border-b-2 border-slurry/40">
         <div className="container-page">
           {posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-sm border border-dashed border-steel-light/50 bg-white py-16 px-6 text-center">
-              <Newspaper size={36} className="text-steel-light mb-3" aria-hidden="true" />
-              <p className="text-base text-charcoal font-medium">No announcements published yet.</p>
-              <p className="mt-1 text-sm text-steel">Check back soon for the latest updates and company news.</p>
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-slurry/50 bg-aggregate-deep py-16 px-6 text-center">
+              <Newspaper size={40} className="text-steel mb-3" aria-hidden="true" />
+              <p className="font-display text-2xl uppercase text-chalk">No announcements published yet.</p>
+              <p className="mt-2 font-body text-sm text-steel-light">Check back soon for the latest updates and company news.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -64,10 +65,10 @@ export default async function UpdatesPage() {
                 return (
                   <article
                     key={post.id}
-                    className="group flex flex-col overflow-hidden rounded-sm bg-white shadow-sm transition-shadow hover:shadow-md"
+                    className="group flex flex-col justify-between border-2 border-slurry/50 bg-aggregate-deep shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115] transition-all hover:border-flame"
                   >
                     {post.cover_image_url && (
-                      <div className="relative aspect-[16/9] w-full overflow-hidden bg-steel-light/20">
+                      <div className="relative aspect-[16/9] w-full overflow-hidden bg-slurry/30 border-b-2 border-slurry/40">
                         <ImageWithFallback
                           src={post.cover_image_url}
                           alt={post.title}
@@ -79,24 +80,24 @@ export default async function UpdatesPage() {
                     )}
                     <div className="flex flex-1 flex-col justify-between p-6">
                       <div>
-                        <time className="font-mono text-xs text-orange uppercase tracking-wider">
+                        <time className="font-tech text-xs text-flame uppercase tracking-widest font-bold">
                           {new Date(post.created_at).toLocaleDateString("en-CA", {
                             year: "numeric",
                             month: "short",
                             day: "numeric",
                           })}
                         </time>
-                        <h2 className="mt-2 text-xl text-charcoal group-hover:text-orange transition-colors">
+                        <h2 className="mt-2 font-display text-2xl uppercase tracking-wide text-chalk group-hover:text-flame transition-colors">
                           <Link href={`/updates/${post.slug}`}>{post.title}</Link>
                         </h2>
-                        <p className="mt-3 text-sm leading-relaxed text-steel">{excerpt}</p>
+                        <p className="mt-3 font-body text-sm leading-relaxed text-steel-light">{excerpt}</p>
                       </div>
-                      <div className="mt-6 border-t border-steel-light/20 pt-4">
+                      <div className="mt-6 border-t border-slurry/40 pt-4">
                         <Link
                           href={`/updates/${post.slug}`}
-                          className="inline-flex items-center gap-1 font-display text-xs uppercase tracking-wider text-orange hover:text-orange-hover"
+                          className="inline-flex items-center gap-1.5 font-tech text-xs font-bold uppercase tracking-wider text-flame hover:underline"
                         >
-                          Read full update <ArrowRight size={14} aria-hidden="true" />
+                          READ FULL UPDATE <ArrowRight size={14} aria-hidden="true" />
                         </Link>
                       </div>
                     </div>

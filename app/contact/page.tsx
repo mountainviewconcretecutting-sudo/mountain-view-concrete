@@ -24,61 +24,67 @@ const SERVICE_COMMUNITIES = [
 export default function ContactPage() {
   return (
     <>
-      <section className="cut-above bg-charcoal py-20 pb-28 text-white md:py-28 md:pb-36">
+      <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
         <div className="container-page">
-          <p className="eyebrow">Get In Touch</p>
-          <h1 className="mt-2 max-w-2xl text-4xl md:text-5xl">Contact Us</h1>
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// GET IN TOUCH"}
+          </span>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
+            CONTACT US
+          </h1>
         </div>
       </section>
 
-      <section className="bg-fog py-16 md:py-20">
+      <section className="bg-aggregate py-16 md:py-20 border-b-2 border-slurry/40">
         <div className="container-page grid grid-cols-1 gap-12 md:grid-cols-5">
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 space-y-6">
             <ul className="flex flex-col gap-6">
-              <li className="flex gap-3">
-                <Phone size={22} className="mt-0.5 text-orange" aria-hidden="true" />
+              <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
+                <Phone size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
-                  <p className="font-display text-sm uppercase tracking-wide text-charcoal">Phone</p>
-                  <a href="tel:8257341419" className="text-steel hover:text-orange">
+                  <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Phone</p>
+                  <a href="tel:8257341419" className="font-body text-base text-steel-light hover:text-flame transition-colors font-bold">
                     825-734-1419
                   </a>
                 </div>
               </li>
-              <li className="flex gap-3">
-                <Mail size={22} className="mt-0.5 text-orange" aria-hidden="true" />
+              <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
+                <Mail size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
-                  <p className="font-display text-sm uppercase tracking-wide text-charcoal">Email</p>
-                  <a href="mailto:crafuse0@gmail.com" className="text-steel hover:text-orange">
+                  <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Email</p>
+                  <a href="mailto:crafuse0@gmail.com" className="font-body text-base text-steel-light hover:text-flame transition-colors font-bold">
                     crafuse0@gmail.com
                   </a>
                 </div>
               </li>
-              <li className="flex gap-3">
-                <MapPin size={22} className="mt-0.5 text-orange" aria-hidden="true" />
+              <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
+                <MapPin size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
-                  <p className="font-display text-sm uppercase tracking-wide text-charcoal">Address</p>
-                  <p className="text-steel">3904 3A Street NE, Calgary, Alberta T2E 6R4</p>
+                  <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Address</p>
+                  <p className="font-body text-sm text-steel-light">3904 3A Street NE, Calgary, Alberta T2E 6R4</p>
                 </div>
               </li>
-              <li className="flex gap-3">
-                <Clock size={22} className="mt-0.5 text-orange" aria-hidden="true" />
+              <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
+                <Clock size={24} className="mt-0.5 text-ochre shrink-0" aria-hidden="true" />
                 <div>
-                  <p className="font-display text-sm uppercase tracking-wide text-charcoal">Availability</p>
-                  <p className="text-steel">24/7 Emergency Service Available</p>
+                  <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Availability</p>
+                  <p className="font-tech text-sm text-ochre font-bold">24/7 Emergency Service Available</p>
                 </div>
               </li>
             </ul>
 
-            <div className="mt-8 rounded-sm border border-steel-light/30 bg-white p-6">
-              <p className="eyebrow">Service Coverage Area</p>
-              <h3 className="mt-1 text-base font-medium text-charcoal">Calgary &amp; Western Alberta</h3>
-              <p className="mt-2 text-xs text-steel leading-relaxed">
+            <div className="border-2 border-slurry/50 bg-aggregate-deep p-6 shadow-[3px_3px_0px_#0F1115]">
+              <span className="font-tech text-xs font-bold uppercase tracking-[0.2em] text-flame">
+                {"// SERVICE COVERAGE AREA"}
+              </span>
+              <h3 className="mt-1 font-display text-2xl uppercase tracking-wide text-chalk">CALGARY &amp; WESTERN ALBERTA</h3>
+              <p className="mt-2 font-body text-xs text-steel-light leading-relaxed">
                 We dispatch mobile concrete cutting crews across Calgary and surrounding communities:
               </p>
-              <ul className="mt-3 grid grid-cols-2 gap-1.5 text-xs text-steel font-mono">
+              <ul className="mt-4 grid grid-cols-2 gap-2 font-tech text-xs font-bold uppercase tracking-wider text-steel-light">
                 {SERVICE_COMMUNITIES.map((city) => (
-                  <li key={city} className="flex items-center gap-1">
-                    <span className="text-orange">▪</span> {city}
+                  <li key={city} className="flex items-center gap-1.5 border border-slurry/40 bg-slurry/20 p-2">
+                    <span className="text-flame">▪</span> {city}
                   </li>
                 ))}
               </ul>

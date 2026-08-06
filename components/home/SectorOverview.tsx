@@ -20,19 +20,28 @@ const SECTORS = [
 
 export default function SectorOverview() {
   return (
-    <section className="bg-fog py-16 md:py-24">
+    <section className="bg-aggregate py-16 md:py-24 border-b-2 border-slurry/40">
       <div className="container-page">
-        <p className="eyebrow">Who We Work With</p>
-        <h2 className="mt-2 max-w-xl text-3xl text-charcoal md:text-4xl">
-          Built for every scale of project
+        <div className="flex items-center gap-2">
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// SECTOR OVERVIEW"}
+          </span>
+        </div>
+        <h2 className="mt-2 max-w-xl font-display text-4xl uppercase tracking-tight text-chalk md:text-5xl">
+          BUILT FOR EVERY SCALE OF PROJECT
         </h2>
 
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
           {SECTORS.map(({ icon: Icon, title, copy }) => (
-            <div key={title} className="rounded-sm border border-steel-light/30 bg-white p-7">
-              <Icon size={28} className="text-orange" aria-hidden="true" />
-              <h3 className="mt-4 text-xl text-charcoal">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{copy}</p>
+            <div
+              key={title}
+              className="border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115] transition-all hover:border-flame"
+            >
+              <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame mb-6">
+                <Icon size={26} aria-hidden="true" />
+              </div>
+              <h3 className="font-display text-2xl uppercase tracking-wide text-chalk">{title}</h3>
+              <p className="mt-3 font-body text-sm leading-relaxed text-steel">{copy}</p>
             </div>
           ))}
         </div>

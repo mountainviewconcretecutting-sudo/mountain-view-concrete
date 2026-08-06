@@ -20,8 +20,6 @@ async function getFeaturedProjects(): Promise<Project[]> {
     }
     return data ?? [];
   } catch (err) {
-    // Supabase env vars not configured yet in this environment — degrade
-    // gracefully instead of crashing the homepage.
     console.error("Supabase client unavailable:", err);
     return [];
   }
@@ -31,33 +29,40 @@ export default async function FeaturedProjectsPreview() {
   const projects = await getFeaturedProjects();
 
   return (
-    <section className="bg-fog py-16 md:py-24">
+    <section className="bg-aggregate py-16 md:py-24 border-b-2 border-slurry/40">
       <div className="container-page">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">Recent Work</p>
-            <h2 className="mt-2 text-3xl text-charcoal md:text-4xl">Featured Projects</h2>
+            <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+              {"// RECENT WORK"}
+            </span>
+            <h2 className="mt-2 font-display text-4xl uppercase tracking-tight text-chalk md:text-5xl">
+              FEATURED PROJECTS
+            </h2>
           </div>
           <Link
             href="/projects"
-            className="inline-flex items-center gap-1 font-display text-sm uppercase tracking-wider text-orange"
+            className="inline-flex items-center gap-2 font-tech text-xs font-bold uppercase tracking-widest text-flame hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flame"
           >
-            View all projects <ArrowRight size={16} aria-hidden="true" />
+            VIEW ALL PROJECTS <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
 
         {projects.length === 0 ? (
-          <div className="mt-10 flex flex-col items-center gap-3 rounded-sm border border-dashed border-steel-light/50 bg-white py-16 text-center">
-            <ImageOff size={32} className="text-steel-light" aria-hidden="true" />
-            <p className="text-sm text-steel">
+          <div className="mt-10 flex flex-col items-center gap-3 border-2 border-dashed border-slurry/50 bg-aggregate-deep py-16 text-center">
+            <ImageOff size={36} className="text-steel" aria-hidden="true" />
+            <p className="font-body text-sm text-steel-light">
               Project photos are coming soon. Check back shortly, or view our full service list.
             </p>
           </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
             {projects.map((project) => (
-              <article key={project.id} className="group overflow-hidden rounded-sm bg-white shadow-sm">
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-steel-light/20">
+              <article
+                key={project.id}
+                className="group border-2 border-slurry/50 bg-aggregate-deep shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115] transition-all hover:border-flame"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-slurry/30 border-b-2 border-slurry/40">
                   <ImageWithFallback
                     src={project.image_url}
                     alt={project.title}
@@ -66,12 +71,14 @@ export default async function FeaturedProjectsPreview() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <div className="p-5">
-                  <span className="font-mono text-[11px] uppercase tracking-widest text-orange">
+                <div className="p-6">
+                  <span className="inline-block border border-flame/40 bg-flame/10 px-2 py-0.5 font-tech text-[10px] font-bold uppercase tracking-widest text-flame mb-2">
                     {project.category}
                   </span>
-                  <h3 className="mt-1 text-lg text-charcoal">{project.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-steel">{project.summary}</p>
+                  <h3 className="font-display text-2xl uppercase tracking-wide text-chalk group-hover:text-flame transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="mt-2 font-body text-sm leading-relaxed text-steel-light">{project.summary}</p>
                 </div>
               </article>
             ))}

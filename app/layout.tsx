@@ -1,9 +1,30 @@
 import type { Metadata, Viewport } from "next";
-import { Oswald, Work_Sans, JetBrains_Mono } from "next/font/google";
+import { Teko, Barlow, Chakra_Petch, Oswald, Work_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyCallBar from "@/components/StickyCallBar";
+
+const teko = Teko({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-teko",
+  display: "swap",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-barlow",
+  display: "swap",
+});
+
+const chakraPetch = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-chakra",
+  display: "swap",
+});
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -149,7 +170,7 @@ export default async function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${oswald.variable} ${workSans.variable} ${jetbrainsMono.variable} font-body`}
+        className={`${teko.variable} ${barlow.variable} ${chakraPetch.variable} ${oswald.variable} ${workSans.variable} ${jetbrainsMono.variable} font-body bg-aggregate text-chalk selection:bg-flame selection:text-white`}
       >
         <EditModeProvider isAdmin={isAdmin}>
           <a

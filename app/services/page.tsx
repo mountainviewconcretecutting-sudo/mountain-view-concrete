@@ -36,15 +36,19 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <section className="cut-above bg-charcoal py-20 pb-28 text-white md:py-28 md:pb-36">
+      <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
         <div className="container-page">
-          <p className="eyebrow">What We Do</p>
-          <h1 className="mt-2 max-w-2xl text-4xl md:text-5xl">Concrete Cutting &amp; Property Services</h1>
+          <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+            {"// WHAT WE DO"}
+          </span>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
+            CONCRETE CUTTING &amp; PROPERTY SERVICES
+          </h1>
         </div>
       </section>
 
       {/* Cutting Services Grid */}
-      <section id="cutting" className="scroll-mt-20 bg-fog py-16 md:py-20">
+      <section id="cutting" className="scroll-mt-20 bg-aggregate py-16 md:py-20 border-b-2 border-slurry/40">
         <div className="container-page grid grid-cols-1 gap-6 md:grid-cols-2">
           {cuttingServices.map((service) => {
             const Icon = getServiceIcon(service.icon_name);
@@ -52,17 +56,19 @@ export default async function ServicesPage() {
               <div
                 key={service.id}
                 id={service.slug}
-                className="scroll-mt-20 rounded-sm border border-steel-light/30 bg-white p-7"
+                className="scroll-mt-20 border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]"
               >
-                <Icon size={30} className="text-orange" aria-hidden="true" />
-                <h2 className="mt-4 text-2xl text-charcoal">{service.title}</h2>
-                <p className="mt-2 leading-relaxed text-steel">{service.description}</p>
+                <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame mb-4">
+                  <Icon size={26} aria-hidden="true" />
+                </div>
+                <h2 className="font-display text-3xl uppercase tracking-wide text-chalk">{service.title}</h2>
+                <p className="mt-3 font-body text-base leading-relaxed text-steel-light">{service.description}</p>
                 {service.spec_list && service.spec_list.length > 0 && (
-                  <ul className="mt-4 flex flex-wrap gap-2 border-t border-steel-light/20 pt-3">
+                  <ul className="mt-6 flex flex-wrap gap-2 border-t border-slurry/40 pt-4">
                     {service.spec_list.map((spec) => (
                       <li
                         key={spec}
-                        className="rounded-xs bg-fog px-2.5 py-1 font-mono text-xs text-steel"
+                        className="border border-slurry/60 bg-slurry/20 px-3 py-1 font-tech text-xs font-bold uppercase tracking-wider text-flame"
                       >
                         {spec}
                       </li>
@@ -76,25 +82,29 @@ export default async function ServicesPage() {
       </section>
 
       {/* Equipment Fleet Section */}
-      <section id="equipment" className="scroll-mt-20 bg-white py-16 md:py-20">
+      <section id="equipment" className="scroll-mt-20 bg-aggregate-deep py-16 md:py-20 border-b-2 border-slurry/40">
         <div className="container-page">
-          <div className="flex items-center gap-3">
-            <WrenchIcon size={28} className="text-orange" aria-hidden="true" />
+          <div className="flex items-center gap-3 mb-8">
+            <div className="flex h-12 w-12 items-center justify-center border border-ochre/40 bg-ochre/10 text-ochre">
+              <WrenchIcon size={26} aria-hidden="true" />
+            </div>
             <div>
-              <p className="eyebrow">Machinery &amp; Fleet</p>
-              <h2 className="text-2xl text-charcoal md:text-3xl">Equipment &amp; Fleet Inventory</h2>
+              <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-ochre">
+                {"// MACHINERY & FLEET"}
+              </span>
+              <h2 className="font-display text-3xl uppercase tracking-wide text-chalk md:text-4xl">EQUIPMENT &amp; FLEET INVENTORY</h2>
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {equipmentList.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-col justify-between rounded-sm border border-steel-light/30 bg-fog p-5"
+                className="flex flex-col justify-between border-2 border-slurry/50 bg-aggregate p-6 shadow-[3px_3px_0px_#0F1115]"
               >
                 <div>
                   {item.image_url ? (
-                    <div className="relative mb-4 h-36 w-full overflow-hidden rounded-sm border border-steel-light/30">
+                    <div className="relative mb-4 h-40 w-full overflow-hidden border border-slurry/50 bg-slurry/30">
                       <ImageWithFallback
                         src={item.image_url}
                         alt={item.name}
@@ -104,16 +114,16 @@ export default async function ServicesPage() {
                       />
                     </div>
                   ) : null}
-                  <h3 className="text-lg font-medium text-charcoal">{item.name}</h3>
+                  <h3 className="font-display text-2xl uppercase tracking-wide text-chalk">{item.name}</h3>
                   {item.description && (
-                    <p className="mt-2 text-sm leading-normal text-steel">{item.description}</p>
+                    <p className="mt-2 font-body text-sm leading-normal text-steel-light">{item.description}</p>
                   )}
                 </div>
                 {item.specs && item.specs.length > 0 && (
-                  <ul className="mt-4 space-y-1.5 border-t border-steel-light/30 pt-3 text-xs text-steel">
+                  <ul className="mt-4 space-y-2 border-t border-slurry/40 pt-4 font-tech text-xs font-bold uppercase tracking-wider text-chalk">
                     {item.specs.map((spec) => (
-                      <li key={spec} className="flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-orange" />
+                      <li key={spec} className="flex items-center gap-2">
+                        <span className="h-2 w-2 bg-flame" />
                         {spec}
                       </li>
                     ))}
@@ -129,21 +139,26 @@ export default async function ServicesPage() {
       {propertyService && (
         <section
           id="property-services"
-          className="scroll-mt-20 cut-above bg-charcoal py-16 text-white md:py-20"
+          className="scroll-mt-20 bg-aggregate py-16 text-chalk md:py-20 border-b-2 border-slurry/40"
         >
           <div className="container-page">
-            <div className="flex items-start gap-3">
-              <Wrench size={28} className="mt-1 text-orange" aria-hidden="true" />
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame shrink-0 mt-1">
+                <Wrench size={26} aria-hidden="true" />
+              </div>
               <div>
-                <h2 className="text-2xl md:text-3xl">{propertyService.title}</h2>
-                <p className="mt-2 max-w-2xl text-white/70">{propertyService.description}</p>
+                <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+                  {"// ADDITIONAL CAPABILITIES"}
+                </span>
+                <h2 className="font-display text-4xl uppercase tracking-tight text-chalk">{propertyService.title}</h2>
+                <p className="mt-2 max-w-2xl font-body text-base text-steel-light leading-relaxed">{propertyService.description}</p>
               </div>
             </div>
             {propertyService.spec_list && propertyService.spec_list.length > 0 && (
-              <ul className="mt-8 grid grid-cols-1 gap-x-8 gap-y-3 text-sm text-white/80 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-8 grid grid-cols-1 gap-x-8 gap-y-4 font-tech text-sm font-bold uppercase tracking-wider text-chalk sm:grid-cols-2 lg:grid-cols-3">
                 {propertyService.spec_list.map((item) => (
-                  <li key={item} className="border-b border-white/10 pb-3">
-                    {item}
+                  <li key={item} className="border-b border-slurry/40 pb-3 flex items-center gap-2">
+                    <span className="text-flame">▶</span> {item}
                   </li>
                 ))}
               </ul>
