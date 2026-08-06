@@ -137,7 +137,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Theme CSS custom properties — sourced from theme_settings table */}
         <style dangerouslySetInnerHTML={{ __html: `:root {\n    ${cssVars}\n  }` }} />
@@ -148,6 +148,7 @@ export default async function RootLayout({
         />
       </head>
       <body
+        suppressHydrationWarning
         className={`${oswald.variable} ${workSans.variable} ${jetbrainsMono.variable} font-body`}
       >
         <EditModeProvider isAdmin={isAdmin}>
