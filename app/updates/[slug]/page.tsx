@@ -7,7 +7,6 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CommentsSection from "@/components/comments/CommentsSection";
 import type { Post, Comment } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 

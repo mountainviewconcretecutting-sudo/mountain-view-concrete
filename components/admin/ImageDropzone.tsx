@@ -128,6 +128,7 @@ export function ImageDropzone({
         ) : previewUrl ? (
           <div className="flex items-center space-x-4 w-full pointer-events-none">
             <div className="relative w-16 h-16 bg-slate-900 border border-slate-700 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewUrl}
                 alt="Uploaded preview"
