@@ -30,23 +30,19 @@ export default function Hero({
         </div>
 
         <div className="max-w-4xl">
-          <h1 className="font-display text-5xl font-bold uppercase tracking-tight text-chalk sm:text-6xl md:text-7xl lg:text-8xl leading-none">
-            <EditableText
-              contentKey="hero_tagline"
-              initialValue={tagline}
-              isAdmin={isAdmin}
-              multiline={true}
-            />
-          </h1>
+          <EditableText
+            contentKey="hero_tagline"
+            initialValue={tagline}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
 
-          <div className="mt-6 max-w-2xl font-body text-base text-steel-light sm:text-lg md:text-xl leading-relaxed">
-            <EditableText
-              contentKey="hero_subtext"
-              initialValue={subtext}
-              isAdmin={isAdmin}
-              multiline={true}
-            />
-          </div>
+          <EditableText
+            contentKey="hero_subtext"
+            initialValue={subtext}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
