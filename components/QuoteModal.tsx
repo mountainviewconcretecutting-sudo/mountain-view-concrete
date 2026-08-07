@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { X, CheckCircle2, Loader2, Send } from "lucide-react";
 import { submitQuote } from "@/lib/actions/submitQuote";
 import { SERVICE_TYPE_LABELS, type QuoteFormValues, type ServiceType } from "@/lib/types";
@@ -22,6 +23,7 @@ const EMPTY_FORM: QuoteFormValues = {
 };
 
 export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [values, setValues] = useState<QuoteFormValues>({
     ...EMPTY_FORM,
     serviceType: defaultServiceType ?? EMPTY_FORM.serviceType,
@@ -31,6 +33,10 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
   const [statusMessage, setStatusMessage] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -64,7 +70,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   function updateField<K extends keyof QuoteFormValues>(key: K, value: QuoteFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -97,9 +103,9 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
     }, 200);
   }
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-aggregate-deep/85 backdrop-blur-xs p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6"
       role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
@@ -110,9 +116,9 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
         role="dialog"
         aria-modal="true"
         aria-labelledby="quote-modal-title"
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto border-2 border-slurry/60 bg-aggregate-deep shadow-[6px_6px_0px_#0F1115] text-chalk"
+        className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden border-2 border-slurry/60 bg-aggregate-deep text-chalk shadow-[6px_6px_0px_#0F1115]"
       >
-        <div className="flex items-center justify-between border-b-2 border-slurry/40 px-6 py-4 bg-aggregate">
+        <div className="flex shrink-0 items-center justify-between border-b-2 border-slurry/40 bg-aggregate px-6 py-4">
           <div>
             <span className="font-tech text-[10px] font-bold uppercase tracking-[0.2em] text-flame">
               {"// PROJECT INQUIRY"}
@@ -132,7 +138,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
         </div>
 
         {status === "success" ? (
-          <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
+          <div className="flex flex-col items-center gap-3 px-6 py-12 text-center overflow-y-auto">
             <CheckCircle2 size={48} className="text-ochre" aria-hidden="true" />
             <p className="font-display text-2xl uppercase tracking-wide text-chalk">Request Received</p>
             <p className="max-w-sm font-body text-sm text-steel-light">{statusMessage}</p>
@@ -141,7 +147,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 px-6 py-6">
+          <form onSubmit={handleSubmit} noValidate className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 py-6">
             <div className="hidden" aria-hidden="true">
               <label htmlFor="companyWebsite">Company website</label>
               <input
@@ -262,7 +268,8 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

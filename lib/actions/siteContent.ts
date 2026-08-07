@@ -11,9 +11,10 @@ export async function getIsAdmin(): Promise<boolean> {
     const supabase = await createSupabaseServerClient();
     const {
       data: { user },
+      error,
     } = await supabase.auth.getUser();
 
-    if (!user) return false;
+    if (error || !user) return false;
 
     const { data: profile } = await supabase
       .from("admin_profiles")
@@ -88,31 +89,17 @@ export async function updateSiteContent(
   value: string
 ): Promise<{ success: boolean; message?: string }> {
   try {
-    const supabase = await createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return { success: false, message: "Unauthorized: Please log in." };
-    }
-
-    const { data: profile } = await supabase
-      .from("admin_profiles")
-      .select("id")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (!profile) {
+    if (!(await getIsAdmin())) {
       return { success: false, message: "Unauthorized: Admin profile required." };
     }
 
-    const { error } = await supabase
+    const supabase = await createSupabaseServerClient();
+    const { error: upsertError } = await supabase
       .from("site_content")
       .upsert({ key, value, updated_at: new Date().toISOString() });
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (upsertError) {
+      return { success: false, message: upsertError.message };
     }
 
     revalidatePath("/", "layout");

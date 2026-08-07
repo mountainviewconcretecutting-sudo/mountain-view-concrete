@@ -17,12 +17,12 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     render: (text) => {
       const parts = text.split("\n");
       return (
-        <h1 className="mt-4 max-w-3xl animate-revealUp text-4xl font-semibold leading-[1.05] opacity-0 [animation-delay:0.25s] sm:text-5xl md:text-6xl">
+        <h1 className="mt-4 max-w-4xl font-display text-5xl font-bold uppercase tracking-tight text-chalk leading-none sm:text-6xl md:text-7xl lg:text-8xl">
           {parts[0]}
           {parts.length > 1 && (
             <>
               <br />
-              <span className="text-orange">{parts.slice(1).join(" ")}</span>
+              <span className="text-flame">{parts.slice(1).join(" ")}</span>
             </>
           )}
         </h1>
@@ -35,7 +35,7 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     page: "Homepage",
     multiline: true,
     render: (text) => (
-      <p className="mt-6 max-w-xl animate-revealUp text-base leading-relaxed text-white/70 opacity-0 [animation-delay:0.4s] md:text-lg">
+      <p className="mt-6 max-w-2xl font-body text-base text-steel-light leading-relaxed sm:text-lg md:text-xl">
         {text}
       </p>
     ),

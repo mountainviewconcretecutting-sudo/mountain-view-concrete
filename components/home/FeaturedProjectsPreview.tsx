@@ -1,29 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ImageOff } from "lucide-react";
 import ImageWithFallback from "@/components/ImageWithFallback";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Project } from "@/lib/types";
-
-async function getFeaturedProjects(): Promise<Project[]> {
-  try {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*")
-      .eq("is_featured", true)
-      .order("sort_order", { ascending: true })
-      .limit(3);
-
-    if (error) {
-      console.error("Failed to load featured projects:", error.message);
-      return [];
-    }
-    return data ?? [];
-  } catch (err) {
-    console.error("Supabase client unavailable:", err);
-    return [];
-  }
-}
+import { getFeaturedProjects } from "@/lib/actions/projects";
 
 export default async function FeaturedProjectsPreview() {
   const projects = await getFeaturedProjects();
