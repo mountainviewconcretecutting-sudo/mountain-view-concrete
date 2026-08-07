@@ -34,6 +34,44 @@ export async function adminLogout() {
   redirect("/admin/login");
 }
 
+const changePasswordSchema = z
+  .object({
+    newPassword: z.string().min(8, "New password must be at least 8 characters."),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "New passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export async function updateAdminPassword(
+  values: { newPassword?: string; confirmPassword?: string }
+): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  const parsed = changePasswordSchema.safeParse(values);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    return {
+      success: false,
+      message: issue ? issue.message : "Please check your password entries.",
+    };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.newPassword,
+  });
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  return { success: true, message: "Admin password updated successfully." };
+}
+
 export async function updateLeadStatus(leadId: string, status: LeadStatus) {
   if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
 

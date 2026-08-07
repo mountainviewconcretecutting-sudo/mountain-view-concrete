@@ -9,6 +9,7 @@ import CommentsTable from "@/components/admin/CommentsTable";
 import ServicesManager from "@/components/admin/ServicesManager";
 import EquipmentManager from "@/components/admin/EquipmentManager";
 import ThemePanel from "@/components/admin/ThemePanel";
+import ChangePasswordPanel from "@/components/admin/ChangePasswordPanel";
 import { AlertTriangle } from "lucide-react";
 import type { Lead, Project, Testimonial, Post, Comment, Service, Equipment } from "@/lib/types";
 
@@ -70,6 +71,13 @@ export default async function AdminDashboardPage() {
             </button>
           </form>
         </div>
+
+        <section className="mt-10">
+          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+            Admin Security &amp; Password
+          </h2>
+          <ChangePasswordPanel />
+        </section>
 
         <section className="mt-10">
           <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
