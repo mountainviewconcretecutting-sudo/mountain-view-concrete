@@ -56,13 +56,26 @@ export default async function ServicesPage() {
               <div
                 key={service.id}
                 id={service.slug}
-                className="scroll-mt-20 border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115]"
+                className="scroll-mt-20 border-2 border-slurry/50 bg-aggregate-deep p-8 shadow-[3px_3px_0px_#0F1115] md:shadow-[6px_6px_0px_#0F1115] flex flex-col justify-between"
               >
-                <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame mb-4">
-                  <Icon size={26} aria-hidden="true" />
+                <div>
+                  {service.image_url && (
+                    <div className="relative mb-6 h-52 w-full overflow-hidden border border-slurry/50 bg-slurry/30">
+                      <ImageWithFallback
+                        src={service.image_url}
+                        alt={service.title}
+                        fill
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame mb-4">
+                    <Icon size={26} aria-hidden="true" />
+                  </div>
+                  <h2 className="font-display text-3xl uppercase tracking-wide text-chalk">{service.title}</h2>
+                  <p className="mt-3 font-body text-base leading-relaxed text-steel-light">{service.description}</p>
                 </div>
-                <h2 className="font-display text-3xl uppercase tracking-wide text-chalk">{service.title}</h2>
-                <p className="mt-3 font-body text-base leading-relaxed text-steel-light">{service.description}</p>
                 {service.spec_list && service.spec_list.length > 0 && (
                   <ul className="mt-6 flex flex-wrap gap-2 border-t border-slurry/40 pt-4">
                     {service.spec_list.map((spec) => (

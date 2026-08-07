@@ -1,34 +1,42 @@
 "use client";
 
 import { useTransition } from "react";
-import { updateLeadStatus } from "@/lib/actions/admin";
+import { Trash2 } from "lucide-react";
+import { updateLeadStatus, deleteLead } from "@/lib/actions/admin";
 import { SERVICE_TYPE_LABELS, type Lead, type LeadStatus } from "@/lib/types";
 
 const STATUS_OPTIONS: LeadStatus[] = ["new", "contacted", "quoted", "won", "lost"];
 
 const STATUS_STYLES: Record<LeadStatus, string> = {
-  new: "bg-orange-soft text-orange-hover",
-  contacted: "bg-mtnGreen-soft text-mtnGreen",
-  quoted: "bg-fog text-charcoal",
-  won: "bg-mtnGreen text-white",
-  lost: "bg-steel-light/30 text-steel",
+  new: "bg-flame text-white font-bold",
+  contacted: "bg-mtnGreen text-white font-bold",
+  quoted: "bg-slurry/40 text-chalk font-bold border border-slurry/80",
+  won: "bg-emerald-600 text-white font-bold",
+  lost: "bg-slurry/20 text-steel-light border border-slurry/40",
 };
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const [isPending, startTransition] = useTransition();
 
+  async function handleDelete(id: string, name: string) {
+    if (!confirm(`Are you sure you want to delete the quote request from "${name}"? This cannot be undone.`)) return;
+    startTransition(() => {
+      deleteLead(id);
+    });
+  }
+
   if (leads.length === 0) {
     return (
-      <p className="rounded-sm border border-dashed border-steel-light/50 bg-white p-8 text-center text-sm text-steel">
+      <p className="border-2 border-dashed border-slurry/50 bg-aggregate-deep p-8 text-center font-body text-sm text-steel-light">
         No quote requests yet. New submissions from the site will show up here.
       </p>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-sm border border-steel-light/30 bg-white">
-      <table className="w-full min-w-[720px] text-left text-sm">
-        <thead className="border-b border-steel-light/30 bg-fog text-xs uppercase tracking-wide text-steel">
+    <div className="overflow-x-auto border-2 border-slurry/50 bg-aggregate-deep shadow-[3px_3px_0px_#0F1115]">
+      <table className="w-full min-w-[760px] text-left text-sm">
+        <thead className="border-b-2 border-slurry/50 bg-slurry/20 font-tech text-xs uppercase tracking-wider text-flame">
           <tr>
             <th className="px-4 py-3">Name</th>
             <th className="px-4 py-3">Contact</th>
@@ -36,24 +44,25 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
             <th className="px-4 py-3">Description</th>
             <th className="px-4 py-3">Received</th>
             <th className="px-4 py-3">Status</th>
+            <th className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slurry/30">
           {leads.map((lead) => (
-            <tr key={lead.id} className="border-b border-steel-light/20 align-top last:border-0">
-              <td className="px-4 py-3 font-medium text-charcoal">{lead.name}</td>
-              <td className="px-4 py-3 text-steel">
-                <div>{lead.phone}</div>
-                <div className="text-xs">{lead.email}</div>
+            <tr key={lead.id} className="align-top hover:bg-slurry/10 transition-colors">
+              <td className="px-4 py-3.5 font-display text-base uppercase text-chalk font-bold">{lead.name}</td>
+              <td className="px-4 py-3.5 text-steel-light font-body">
+                <div className="font-semibold text-chalk">{lead.phone}</div>
+                <div className="text-xs text-steel-light">{lead.email}</div>
               </td>
-              <td className="px-4 py-3 text-steel">{SERVICE_TYPE_LABELS[lead.service_type]}</td>
-              <td className="max-w-xs px-4 py-3 text-steel">
-                <p className="line-clamp-3">{lead.project_description}</p>
+              <td className="px-4 py-3.5 font-tech text-xs uppercase font-bold text-flame">{SERVICE_TYPE_LABELS[lead.service_type]}</td>
+              <td className="max-w-xs px-4 py-3.5 font-body text-sm text-steel-light">
+                <p className="line-clamp-3 leading-relaxed">{lead.project_description}</p>
               </td>
-              <td className="whitespace-nowrap px-4 py-3 text-steel">
+              <td className="whitespace-nowrap px-4 py-3.5 font-mono text-xs text-steel-light">
                 {new Date(lead.created_at).toLocaleDateString("en-CA")}
               </td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3.5">
                 <select
                   aria-label={`Status for ${lead.name}`}
                   defaultValue={lead.status}
@@ -63,14 +72,26 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                       updateLeadStatus(lead.id, e.target.value as LeadStatus);
                     })
                   }
-                  className={`rounded-full border-0 px-3 py-1 text-xs font-medium uppercase tracking-wide ${STATUS_STYLES[lead.status]}`}
+                  className={`rounded-none border border-slurry/60 bg-aggregate px-3 py-1.5 font-tech text-xs uppercase tracking-wider ${STATUS_STYLES[lead.status]}`}
                 >
                   {STATUS_OPTIONS.map((s) => (
-                    <option key={s} value={s}>
+                    <option key={s} value={s} className="bg-aggregate-deep text-chalk">
                       {s}
                     </option>
                   ))}
                 </select>
+              </td>
+              <td className="whitespace-nowrap px-4 py-3.5 text-right">
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleDelete(lead.id, lead.name)}
+                  className="flex h-8 w-8 items-center justify-center border border-flame/40 bg-flame/10 text-flame hover:bg-flame hover:text-white transition-colors disabled:opacity-50 inline-flex"
+                  title="Delete quote request"
+                  aria-label={`Delete quote request from ${lead.name}`}
+                >
+                  <Trash2 size={15} />
+                </button>
               </td>
             </tr>
           ))}

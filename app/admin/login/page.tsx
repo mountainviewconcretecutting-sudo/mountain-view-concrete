@@ -12,13 +12,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-fog px-4 py-16">
-      <div className="w-full max-w-sm rounded-sm bg-white p-8 shadow-sm">
-        <h1 className="font-display text-2xl uppercase tracking-wide text-charcoal">Admin Login</h1>
-        <p className="mt-1 text-sm text-steel">Mountain View Concrete Cutting Inc.</p>
+      <div className="w-full max-w-sm rounded-sm bg-white p-8 shadow-md border border-slate-200">
+        <h1 className="font-display text-2xl uppercase tracking-wide text-charcoal font-bold">Admin Login</h1>
+        <p className="mt-1 text-sm text-slate-600 font-medium">Mountain View Concrete Cutting Inc.</p>
 
         <form action={formAction} className="mt-6 flex flex-col gap-4">
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-charcoal">
+            <label htmlFor="email" className="mb-1 block text-sm font-semibold text-charcoal">
               Email
             </label>
             <input
@@ -27,11 +27,11 @@ export default function AdminLoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="w-full rounded-sm border border-steel-light/50 px-3 py-2.5 text-sm focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30"
+              className="w-full rounded-sm border border-slate-300 bg-white px-3 py-2.5 text-sm text-charcoal focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30"
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-charcoal">
+            <label htmlFor="password" className="mb-1 block text-sm font-semibold text-charcoal">
               Password
             </label>
             <input
@@ -40,12 +40,12 @@ export default function AdminLoginPage() {
               type="password"
               required
               autoComplete="current-password"
-              className="w-full rounded-sm border border-steel-light/50 px-3 py-2.5 text-sm focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30"
+              className="w-full rounded-sm border border-slate-300 bg-white px-3 py-2.5 text-sm text-charcoal focus:border-orange focus:outline-none focus:ring-2 focus:ring-orange/30"
             />
           </div>
 
           {!state.success && state.message && (
-            <p role="alert" className="text-sm font-medium text-orange-hover">
+            <p role="alert" className="text-sm font-semibold text-flame">
               {state.message}
             </p>
           )}

@@ -98,15 +98,15 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
   );
 
   return (
-    <div className="rounded-sm border border-steel-light/30 bg-white p-6">
-      <div className="mb-5 flex items-center gap-2">
-        <Palette size={18} className="text-orange" aria-hidden="true" />
-        <p className="text-sm text-steel">
+    <div className="border-2 border-slurry/50 bg-aggregate-deep p-6 text-chalk shadow-[3px_3px_0px_#0F1115]">
+      <div className="mb-5 flex items-center gap-2 border-b border-slurry/40 pb-4">
+        <Palette size={20} className="text-flame" aria-hidden="true" />
+        <p className="font-body text-sm text-steel-light">
           Changes apply site-wide instantly. Use the reset button to restore any token to its brand default.
         </p>
       </div>
 
-      <div className="divide-y divide-steel-light/20">
+      <div className="divide-y divide-slurry/30">
         {Object.keys(THEME_COLOR_DEFAULTS).map((key) => {
           const row = getRow(rows, key);
           const defaultVal = THEME_COLOR_DEFAULTS[key] ?? "#000000";
@@ -115,12 +115,12 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
           return (
             <div
               key={key}
-              className="flex items-center gap-4 py-3.5 first:pt-0 last:pb-0"
+              className="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
             >
               {/* Color swatch + native picker */}
               <div className="relative flex-none">
                 <div
-                  className="h-9 w-9 rounded-sm border border-steel-light/30 shadow-sm"
+                  className="h-10 w-10 border-2 border-slurry/60 shadow-sm"
                   style={{ backgroundColor: row.value }}
                   aria-hidden="true"
                 />
@@ -139,7 +139,7 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
               <div className="min-w-0 flex-1">
                 <label
                   htmlFor={`theme-hex-${key}`}
-                  className="block text-xs font-display uppercase tracking-wide text-charcoal"
+                  className="block font-tech text-xs font-bold uppercase tracking-wider text-chalk"
                 >
                   {TOKEN_LABELS[key] ?? key}
                 </label>
@@ -162,7 +162,7 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
                     }}
                     maxLength={7}
                     placeholder="#000000"
-                    className="w-28 rounded border border-steel-light/40 px-2 py-1 font-mono text-xs text-charcoal focus:border-orange focus:outline-none focus:ring-1 focus:ring-orange"
+                    className="w-28 border-2 border-slurry/60 bg-aggregate px-2.5 py-1.5 font-mono text-xs text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none"
                     aria-label={`Hex value for ${TOKEN_LABELS[key] ?? key}`}
                   />
                   {/* Reset to brand default */}
@@ -171,7 +171,7 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
                       type="button"
                       onClick={() => handleReset(key)}
                       title="Reset to brand default"
-                      className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-steel hover:text-charcoal hover:bg-steel-light/20 transition-colors"
+                      className="flex items-center gap-1 border border-slurry/50 bg-slurry/20 px-2 py-1 font-tech text-xs font-bold text-steel-light hover:border-flame hover:text-flame transition-colors"
                     >
                       <RotateCcw size={12} />
                       <span className="hidden sm:inline">Reset</span>
@@ -183,20 +183,20 @@ export default function ThemePanel({ initialColors }: ThemePanelProps) {
               {/* Per-row save status */}
               <div className="flex-none w-24 text-right">
                 {row.saveState === "saving" && (
-                  <span className="inline-flex items-center gap-1 text-xs text-steel">
+                  <span className="inline-flex items-center gap-1 font-tech text-xs font-bold text-steel-light">
                     <Loader2 size={12} className="animate-spin" />
                     Saving…
                   </span>
                 )}
                 {row.saveState === "saved" && (
-                  <span className="inline-flex items-center gap-1 text-xs text-mtnGreen">
+                  <span className="inline-flex items-center gap-1 font-tech text-xs font-bold text-mtnGreen">
                     <CheckCircle size={12} />
                     Saved
                   </span>
                 )}
                 {row.saveState === "error" && (
                   <span
-                    className="inline-flex items-center gap-1 text-xs text-red-500"
+                    className="inline-flex items-center gap-1 font-tech text-xs font-bold text-flame"
                     title={row.errorMsg ?? undefined}
                   >
                     <AlertCircle size={12} />

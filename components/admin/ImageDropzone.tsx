@@ -87,7 +87,7 @@ export function ImageDropzone({
 
   return (
     <div className="space-y-2">
-      <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+      <label className="block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
         {label}
       </label>
 
@@ -106,8 +106,8 @@ export function ImageDropzone({
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center p-5 border-2 border-dashed rounded-none cursor-pointer transition-colors ${
           isDragging
-            ? "border-orange-500 bg-orange-500/10"
-            : "border-slate-700 bg-slate-800/60 hover:border-orange-500/60 hover:bg-slate-800/90"
+            ? "border-flame bg-flame/10"
+            : "border-slurry/60 bg-aggregate hover:border-flame/80 hover:bg-aggregate-deep"
         }`}
       >
         <input
@@ -121,13 +121,13 @@ export function ImageDropzone({
         />
 
         {isUploading ? (
-          <div className="flex flex-col items-center py-2 text-orange-500 pointer-events-none">
+          <div className="flex flex-col items-center py-2 text-flame pointer-events-none">
             <Loader2 className="w-7 h-7 animate-spin mb-2" />
-            <span className="text-xs font-bold uppercase tracking-wider">Uploading to Supabase Storage...</span>
+            <span className="font-tech text-xs font-bold uppercase tracking-wider">Uploading to Supabase Storage...</span>
           </div>
         ) : previewUrl ? (
           <div className="flex items-center space-x-4 w-full pointer-events-none">
-            <div className="relative w-16 h-16 bg-slate-900 border border-slate-700 overflow-hidden flex-shrink-0 flex items-center justify-center">
+            <div className="relative w-16 h-16 bg-aggregate-deep border border-slurry/60 overflow-hidden flex-shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewUrl}
@@ -137,29 +137,29 @@ export function ImageDropzone({
                   (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
-              <ImageIcon className="w-6 h-6 text-slate-500 absolute" />
+              <ImageIcon className="w-6 h-6 text-steel-light absolute" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center text-emerald-400 text-xs font-bold uppercase mb-1">
+              <div className="flex items-center text-mtnGreen font-tech text-xs font-bold uppercase mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Image Attached
               </div>
-              <p className="text-xs text-slate-400 truncate font-mono">{previewUrl}</p>
-              <p className="text-[11px] text-orange-400 font-semibold mt-1">Click or drag new image to replace</p>
+              <p className="text-xs text-steel-light truncate font-mono">{previewUrl}</p>
+              <p className="font-tech text-xs font-bold text-flame mt-1">Click or drag new image to replace</p>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center py-2 text-slate-400 text-center pointer-events-none">
-            <Upload className="w-7 h-7 mb-2 text-orange-500" />
-            <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
-              Drag & drop image here, or <span className="text-orange-500 underline">browse</span>
+          <div className="flex flex-col items-center py-2 text-steel-light text-center pointer-events-none">
+            <Upload className="w-7 h-7 mb-2 text-flame" />
+            <span className="font-tech text-xs font-bold text-chalk uppercase tracking-wider">
+              Drag & drop image here, or <span className="text-flame underline">browse</span>
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">Supports JPG, PNG, WEBP (Max 5MB)</span>
+            <span className="font-tech text-[11px] text-steel-light mt-1">Supports JPG, PNG, WEBP (Max 5MB)</span>
           </div>
         )}
       </div>
 
       {error && (
-        <div className="flex items-center text-xs text-red-400 bg-red-950/40 p-2.5 border border-red-800">
+        <div className="flex items-center font-tech text-xs font-bold text-flame bg-flame/10 p-2.5 border border-flame">
           <AlertCircle className="w-4 h-4 mr-1.5 flex-shrink-0" />
           {error}
         </div>

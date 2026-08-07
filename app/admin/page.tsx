@@ -61,33 +61,40 @@ export default async function AdminDashboardPage() {
   if (equipmentError) console.error("[admin] equipment query failed:", equipmentError.message);
 
   return (
-    <div className="bg-fog py-10">
+    <div className="bg-aggregate min-h-screen py-12 text-chalk border-b-4 border-slurry/40">
       <div className="container-page">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl uppercase tracking-wide text-charcoal">Admin Dashboard</h1>
+        <div className="flex items-center justify-between border-b-2 border-slurry/50 pb-6 mb-8">
+          <div>
+            <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
+              {"// CONTROL PANEL"}
+            </span>
+            <h1 className="font-display text-4xl uppercase tracking-wider text-chalk font-bold">
+              ADMIN DASHBOARD
+            </h1>
+          </div>
           <form action={adminLogout}>
-            <button type="submit" className="btn-secondary">
+            <button type="submit" className="btn-secondary !py-2.5 !px-5 text-sm">
               Sign Out
             </button>
           </form>
         </div>
 
-        <section className="mt-10">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+        <section className="mt-8">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Admin Security &amp; Password
           </h2>
           <ChangePasswordPanel />
         </section>
 
-        <section className="mt-10">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+        <section className="mt-12">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Site Theme
           </h2>
           <ThemePanel initialColors={themeSettings} />
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Quote Requests
           </h2>
           {leadsError ? (
@@ -98,7 +105,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Service Catalogue Management
           </h2>
           {servicesError ? (
@@ -109,7 +116,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Machinery &amp; Fleet Equipment
           </h2>
           {equipmentError ? (
@@ -120,7 +127,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Comments Moderation (Posts &amp; Projects)
           </h2>
           {commentsError ? (
@@ -131,7 +138,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Testimonials Moderation
           </h2>
           {testimonialsError ? (
@@ -142,7 +149,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Featured Projects
           </h2>
           {projectsError ? (
@@ -153,7 +160,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-lg uppercase tracking-wide text-charcoal">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
             Announcements &amp; News Posts
           </h2>
           {postsError ? (

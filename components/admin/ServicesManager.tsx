@@ -67,43 +67,43 @@ export default function ServicesManager({ services }: { services: Service[] }) {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
-          <div key={service.id} className="rounded-sm border border-steel-light/30 bg-white p-4">
+          <div key={service.id} className="border-2 border-slurry/50 bg-aggregate-deep p-5 text-chalk shadow-[3px_3px_0px_#0F1115]">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-widest text-orange">
+                <p className="font-tech text-xs font-bold uppercase tracking-widest text-flame">
                   slug: #{service.slug} (order: {service.display_order})
                 </p>
-                <h3 className="text-base font-medium text-charcoal">{service.title}</h3>
+                <h3 className="font-display text-2xl uppercase tracking-wide text-chalk mt-1">{service.title}</h3>
               </div>
               <div className="flex gap-1">
                 <button
                   type="button"
                   onClick={() => openEdit(service)}
                   aria-label={`Edit ${service.title}`}
-                  className="rounded p-1.5 text-steel hover:bg-fog hover:text-charcoal"
+                  className="flex h-8 w-8 items-center justify-center border border-slurry/50 bg-slurry/20 text-steel-light hover:border-flame hover:text-flame transition-colors"
                 >
-                  <Pencil size={16} />
+                  <Pencil size={15} />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(service.id)}
                   aria-label={`Delete ${service.title}`}
-                  className="rounded p-1.5 text-steel hover:bg-orange-soft hover:text-orange-hover"
+                  className="flex h-8 w-8 items-center justify-center border border-flame/40 bg-flame/10 text-flame hover:bg-flame hover:text-white transition-colors"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={15} />
                 </button>
               </div>
             </div>
-            <p className="mt-2 text-sm text-steel line-clamp-3">{service.description}</p>
+            <p className="mt-2 font-body text-sm text-steel-light line-clamp-3">{service.description}</p>
             {service.spec_list && service.spec_list.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1 border-t border-steel-light/20 pt-2">
+              <div className="mt-3 flex flex-wrap gap-1.5 border-t border-slurry/40 pt-2.5">
                 {service.spec_list.slice(0, 3).map((spec) => (
-                  <span key={spec} className="rounded-xs bg-fog px-2 py-0.5 font-mono text-[10px] text-steel">
+                  <span key={spec} className="border border-slurry/60 bg-slurry/20 px-2 py-0.5 font-tech text-[11px] font-bold uppercase tracking-wider text-flame">
                     {spec}
                   </span>
                 ))}
                 {service.spec_list.length > 3 && (
-                  <span className="font-mono text-[10px] text-steel">+{service.spec_list.length - 3} more</span>
+                  <span className="font-tech text-xs font-bold uppercase text-steel-light">+{service.spec_list.length - 3} more</span>
                 )}
               </div>
             )}
@@ -112,15 +112,22 @@ export default function ServicesManager({ services }: { services: Service[] }) {
       </div>
 
       {editing && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal-hard/70 p-4">
-          <div className="w-full max-w-lg rounded-sm bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="font-display text-lg uppercase text-charcoal">
-              {"id" in editing ? "Edit Service" : "New Service"}
-            </h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-xl rounded-none border-2 border-slurry/60 bg-aggregate-deep p-6 text-chalk shadow-[6px_6px_0px_#0F1115] max-h-[90vh] overflow-y-auto">
+            <div className="border-b-2 border-slurry/40 pb-3 mb-4">
+              <span className="font-tech text-[10px] font-bold uppercase tracking-[0.2em] text-flame">
+                {"// SERVICE EDITOR"}
+              </span>
+              <h2 className="font-display text-2xl uppercase tracking-wide text-chalk leading-tight">
+                {"id" in editing ? "Edit Service" : "New Service"}
+              </h2>
+            </div>
 
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Service Title</label>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Service Title <span className="text-flame">*</span>
+                </label>
                 <input
                   placeholder="Title (e.g. Wall Sawing)"
                   value={editing.title}
@@ -133,88 +140,96 @@ export default function ServicesManager({ services }: { services: Service[] }) {
                       slug: "id" in editing ? editing.slug : autoSlug,
                     });
                   }}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-steel mb-1">Anchor Slug</label>
+                  <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                    Anchor Slug <span className="text-flame">*</span>
+                  </label>
                   <input
                     placeholder="slug (e.g. wall-sawing)"
                     value={editing.slug}
                     onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
-                    className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                    className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-steel mb-1">Display Order</label>
+                  <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                    Display Order
+                  </label>
                   <input
                     type="number"
                     placeholder="0"
                     value={editing.display_order}
                     onChange={(e) => setEditing({ ...editing, display_order: Number(e.target.value) })}
-                    className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                    className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Description</label>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Description <span className="text-flame">*</span>
+                </label>
                 <textarea
                   placeholder="Service description"
                   rows={3}
                   value={editing.description}
                   onChange={(e) => setEditing({ ...editing, description: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
                   Capabilities / Specifications (comma-separated)
                 </label>
                 <input
                   placeholder="Up to 24&quot; depth, Track-mounted saws, Flush cutting"
                   value={specInput}
                   onChange={(e) => setSpecInput(e.target.value)}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-steel mb-1">Icon Reference</label>
+                  <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                    Icon Reference
+                  </label>
                   <input
                     placeholder="Scissors, CircleDot, HardHat, Wrench"
                     value={editing.icon_name || "Scissors"}
                     onChange={(e) => setEditing({ ...editing, icon_name: e.target.value })}
-                    className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                    className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                   />
                   {editing.icon_name && !["Scissors", "CircleDot", "HardHat", "Wrench"].includes(editing.icon_name) && (
-                    <p className="mt-1 text-xs font-medium text-orange-hover">
+                    <p className="mt-1 font-tech text-xs font-bold text-flame">
                       ⚠️ Unrecognized icon name (&quot;{editing.icon_name}&quot;) — will display as default (Scissors)
                     </p>
                   )}
                 </div>
-              <div>
-                <ImageDropzone
-                  currentUrl={editing.image_url || ""}
-                  onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
-                  label="Service Card Image (Drag & Drop to Upload)"
-                />
-                <input
-                  placeholder="Or enter Image URL manually"
-                  value={editing.image_url || ""}
-                  onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
-                />
-              </div>
+                <div>
+                  <ImageDropzone
+                    currentUrl={editing.image_url || ""}
+                    onUploadSuccess={(url) => setEditing({ ...editing, image_url: url })}
+                    label="Service Card Image (Drag & Drop to Upload)"
+                  />
+                  <input
+                    placeholder="Or enter Image URL manually"
+                    value={editing.image_url || ""}
+                    onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
+                    className="w-full border-2 border-slurry/60 bg-aggregate px-3 py-2 font-mono text-xs text-chalk placeholder:text-steel-light mt-2"
+                  />
+                </div>
               </div>
 
-              {error && <p className="text-sm font-medium text-orange-hover">{error}</p>}
+              {error && <p className="border border-flame bg-flame/10 p-3 font-tech text-xs text-flame font-bold">{error}</p>}
 
-              <div className="mt-2 flex justify-end gap-2">
+              <div className="mt-4 flex justify-end gap-3 border-t border-slurry/40 pt-4">
                 <button type="button" onClick={() => setEditing(null)} className="btn-secondary">
                   Cancel
                 </button>

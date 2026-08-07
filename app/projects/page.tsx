@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import TestimonialSectionWithForm from "@/components/projects/TestimonialSectionWithForm";
+import { getAllProjects } from "@/lib/actions/projects";
 import type { Project, Testimonial, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -10,24 +11,6 @@ export const metadata: Metadata = {
   title: "Featured Projects",
   description: "Recent residential, commercial, and industrial concrete cutting projects.",
 };
-
-async function getAllProjects(): Promise<Project[]> {
-  try {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*")
-      .order("sort_order", { ascending: true });
-    if (error) {
-      console.error("Failed to load projects:", error.message);
-      return [];
-    }
-    return data ?? [];
-  } catch (err) {
-    console.error("Supabase client unavailable:", err);
-    return [];
-  }
-}
 
 async function getApprovedTestimonials(): Promise<Testimonial[]> {
   try {

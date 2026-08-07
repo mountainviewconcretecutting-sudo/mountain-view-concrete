@@ -25,18 +25,18 @@ export default function Footer() {
             <li><Link href="/contact" className="hover:text-flame transition-colors">Contact</Link></li>
             <li><Link href="/privacy" className="hover:text-flame transition-colors">Privacy Policy</Link></li>
             <li><Link href="/terms" className="hover:text-flame transition-colors">Terms of Service</Link></li>
-            <li><Link href="/admin/login" className="hover:text-flame text-steel/60 transition-colors">Admin Portal</Link></li>
+            <li><Link href="/admin" className="hover:text-flame text-steel/60 transition-colors">Admin Portal</Link></li>
           </ul>
         </nav>
 
         <div>
           <p className="mb-3 font-tech text-xs font-bold uppercase tracking-widest text-chalk border-b border-slurry/30 pb-1">Services</p>
-          <ul className="flex flex-col gap-2 font-body text-sm text-steel">
-            <li>Wall Sawing</li>
-            <li>Slab Sawing</li>
-            <li>Core Drilling (up to 22&quot;)</li>
-            <li>Demolition &amp; Removal</li>
-            <li>Property Maintenance</li>
+          <ul className="flex flex-col gap-2 font-body text-sm">
+            <li><Link href="/services#wall-sawing" className="hover:text-flame transition-colors">Wall Sawing</Link></li>
+            <li><Link href="/services#slab-sawing" className="hover:text-flame transition-colors">Slab Sawing</Link></li>
+            <li><Link href="/services#core-drilling" className="hover:text-flame transition-colors">Core Drilling (up to 22&quot;)</Link></li>
+            <li><Link href="/services#demolition-removal" className="hover:text-flame transition-colors">Demolition &amp; Removal</Link></li>
+            <li><Link href="/services#property-services" className="hover:text-flame transition-colors">Property Maintenance</Link></li>
           </ul>
         </div>
 

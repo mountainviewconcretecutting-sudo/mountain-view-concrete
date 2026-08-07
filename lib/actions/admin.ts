@@ -81,6 +81,15 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
   revalidatePath("/admin");
 }
 
+export async function deleteLead(leadId: string) {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("leads").delete().eq("id", leadId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+}
+
 export async function updateTestimonialStatus(
   testimonialId: string,
   status: "pending" | "approved" | "rejected"

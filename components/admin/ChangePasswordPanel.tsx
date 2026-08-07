@@ -40,28 +40,28 @@ export default function ChangePasswordPanel() {
   }
 
   return (
-    <div className="rounded-sm border border-steel-light/30 bg-white p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-4">
-        <KeyRound size={20} className="text-orange" aria-hidden="true" />
+    <div className="border-2 border-slurry/50 bg-aggregate-deep p-6 text-chalk shadow-[3px_3px_0px_#0F1115]">
+      <div className="flex items-center gap-2 mb-4 border-b border-slurry/40 pb-3">
+        <KeyRound size={20} className="text-flame" aria-hidden="true" />
         <div>
-          <h3 className="font-display text-base uppercase tracking-wide text-charcoal">
+          <h3 className="font-display text-xl uppercase tracking-wider text-chalk font-bold">
             Update Admin Password
           </h3>
-          <p className="text-xs text-steel">
+          <p className="font-body text-xs text-steel-light">
             Set a new secure password for your administrator account.
           </p>
         </div>
       </div>
 
       {status === "success" && (
-        <div className="mb-4 flex items-center gap-2 rounded-sm border border-mtnGreen/30 bg-mtnGreen-soft p-3 text-xs text-mtnGreen font-medium">
+        <div className="mb-4 flex items-center gap-2 border border-mtnGreen bg-mtnGreen/10 p-3 font-tech text-xs text-mtnGreen font-bold">
           <CheckCircle2 size={16} className="shrink-0" />
           <span>{message}</span>
         </div>
       )}
 
       {status === "error" && message && (
-        <div className="mb-4 flex items-center gap-2 rounded-sm border border-orange/30 bg-orange-soft p-3 text-xs text-orange-hover font-medium">
+        <div className="mb-4 flex items-center gap-2 border border-flame bg-flame/10 p-3 font-tech text-xs text-flame font-bold">
           <AlertCircle size={16} className="shrink-0" />
           <span>{message}</span>
         </div>
@@ -69,7 +69,7 @@ export default function ChangePasswordPanel() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
         <div>
-          <label className="block text-xs font-mono uppercase tracking-wider text-steel mb-1">
+          <label className="block font-tech text-xs font-bold uppercase tracking-wider text-chalk mb-1">
             New Password
           </label>
           <div className="relative">
@@ -83,14 +83,14 @@ export default function ChangePasswordPanel() {
                 setNewPassword(e.target.value);
                 if (status === "error") setStatus("idle");
               }}
-              className="w-full rounded-sm border border-steel-light/50 bg-white px-3 py-2 pl-9 text-sm text-charcoal focus:border-orange focus:outline-none"
+              className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 pl-10 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none"
             />
-            <Lock size={15} className="absolute left-3 top-2.5 text-steel-light" />
+            <Lock size={15} className="absolute left-3.5 top-3.5 text-steel-light" />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-mono uppercase tracking-wider text-steel mb-1">
+          <label className="block font-tech text-xs font-bold uppercase tracking-wider text-chalk mb-1">
             Confirm New Password
           </label>
           <div className="relative">
@@ -104,9 +104,9 @@ export default function ChangePasswordPanel() {
                 setConfirmPassword(e.target.value);
                 if (status === "error") setStatus("idle");
               }}
-              className="w-full rounded-sm border border-steel-light/50 bg-white px-3 py-2 pl-9 text-sm text-charcoal focus:border-orange focus:outline-none"
+              className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 pl-10 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none"
             />
-            <Lock size={15} className="absolute left-3 top-2.5 text-steel-light" />
+            <Lock size={15} className="absolute left-3.5 top-3.5 text-steel-light" />
           </div>
         </div>
 
@@ -114,7 +114,7 @@ export default function ChangePasswordPanel() {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="btn-primary flex items-center gap-2 text-xs py-2 px-4 disabled:opacity-60"
+            className="btn-primary flex items-center gap-2 py-2.5 px-5 disabled:opacity-60"
           >
             {status === "submitting" ? (
               <>

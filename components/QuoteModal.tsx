@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { X, CheckCircle2, Loader2, Send } from "lucide-react";
 import { submitQuote } from "@/lib/actions/submitQuote";
 import { SERVICE_TYPE_LABELS, type QuoteFormValues, type ServiceType } from "@/lib/types";
@@ -22,6 +23,7 @@ const EMPTY_FORM: QuoteFormValues = {
 };
 
 export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [values, setValues] = useState<QuoteFormValues>({
     ...EMPTY_FORM,
     serviceType: defaultServiceType ?? EMPTY_FORM.serviceType,
@@ -31,6 +33,10 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
   const [statusMessage, setStatusMessage] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -64,7 +70,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   function updateField<K extends keyof QuoteFormValues>(key: K, value: QuoteFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -97,7 +103,7 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
     }, 200);
   }
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6"
       role="presentation"
@@ -262,7 +268,8 @@ export default function QuoteModal({ open, onClose, defaultServiceType }: QuoteM
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

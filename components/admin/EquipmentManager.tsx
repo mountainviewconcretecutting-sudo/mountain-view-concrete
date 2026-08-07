@@ -66,36 +66,36 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {equipment.map((item) => (
-          <div key={item.id} className="rounded-sm border border-steel-light/30 bg-white p-4">
+          <div key={item.id} className="border-2 border-slurry/50 bg-aggregate-deep p-5 text-chalk shadow-[3px_3px_0px_#0F1115]">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-widest text-orange">
+                <p className="font-tech text-xs font-bold uppercase tracking-widest text-flame">
                   Order: {item.display_order}
                 </p>
-                <h3 className="text-base font-medium text-charcoal">{item.name}</h3>
+                <h3 className="font-display text-2xl uppercase tracking-wide text-chalk mt-1">{item.name}</h3>
               </div>
               <div className="flex gap-1">
                 <button
                   type="button"
                   onClick={() => openEdit(item)}
                   aria-label={`Edit ${item.name}`}
-                  className="rounded p-1.5 text-steel hover:bg-fog hover:text-charcoal"
+                  className="flex h-8 w-8 items-center justify-center border border-slurry/50 bg-slurry/20 text-steel-light hover:border-flame hover:text-flame transition-colors"
                 >
-                  <Pencil size={16} />
+                  <Pencil size={15} />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(item.id)}
                   aria-label={`Delete ${item.name}`}
-                  className="rounded p-1.5 text-steel hover:bg-orange-soft hover:text-orange-hover"
+                  className="flex h-8 w-8 items-center justify-center border border-flame/40 bg-flame/10 text-flame hover:bg-flame hover:text-white transition-colors"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={15} />
                 </button>
               </div>
             </div>
 
             {item.image_url ? (
-              <div className="relative mt-3 h-32 w-full overflow-hidden rounded-sm border border-steel-light/20">
+              <div className="relative mt-3 h-32 w-full overflow-hidden border border-slurry/50 bg-aggregate">
                 <ImageWithFallback
                   src={item.image_url}
                   alt={item.name}
@@ -107,19 +107,19 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
                 />
               </div>
             ) : (
-              <div className="mt-3 flex h-24 w-full items-center justify-center rounded-sm bg-fog text-steel border border-steel-light/20">
-                <div className="flex items-center gap-1.5 text-xs">
+              <div className="mt-3 flex h-24 w-full items-center justify-center border border-slurry/40 bg-aggregate text-steel-light">
+                <div className="flex items-center gap-1.5 font-tech text-xs font-bold uppercase">
                   <ImageOff size={16} /> No Image Provided
                 </div>
               </div>
             )}
 
-            {item.description && <p className="mt-2 text-sm text-steel">{item.description}</p>}
+            {item.description && <p className="mt-2 font-body text-sm text-steel-light">{item.description}</p>}
 
             {item.specs && item.specs.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1 border-t border-steel-light/20 pt-2">
+              <div className="mt-3 flex flex-wrap gap-1.5 border-t border-slurry/40 pt-2.5">
                 {item.specs.map((spec) => (
-                  <span key={spec} className="rounded-xs bg-fog px-2 py-0.5 font-mono text-[10px] text-steel">
+                  <span key={spec} className="border border-slurry/60 bg-slurry/20 px-2 py-0.5 font-tech text-[11px] font-bold uppercase tracking-wider text-flame">
                     {spec}
                   </span>
                 ))}
@@ -130,54 +130,65 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
       </div>
 
       {editing && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal-hard/70 p-4">
-          <div className="w-full max-w-lg rounded-sm bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="font-display text-lg uppercase text-charcoal">
-              {"id" in editing ? "Edit Equipment" : "New Equipment"}
-            </h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-xl rounded-none border-2 border-slurry/60 bg-aggregate-deep p-6 text-chalk shadow-[6px_6px_0px_#0F1115] max-h-[90vh] overflow-y-auto">
+            <div className="border-b-2 border-slurry/40 pb-3 mb-4">
+              <span className="font-tech text-[10px] font-bold uppercase tracking-[0.2em] text-flame">
+                {"// EQUIPMENT EDITOR"}
+              </span>
+              <h2 className="font-display text-2xl uppercase tracking-wide text-chalk leading-tight">
+                {"id" in editing ? "Edit Equipment" : "New Equipment"}
+              </h2>
+            </div>
 
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Equipment Name</label>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Equipment Name <span className="text-flame">*</span>
+                </label>
                 <input
                   placeholder="Name (e.g. Mini excavator / Bobcat)"
                   value={editing.name}
                   onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Display Order</label>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Display Order
+                </label>
                 <input
                   type="number"
                   placeholder="0"
                   value={editing.display_order}
                   onChange={(e) => setEditing({ ...editing, display_order: Number(e.target.value) })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">Description (Optional)</label>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Description (Optional)
+                </label>
                 <textarea
                   placeholder="Brief machinery description"
                   rows={2}
                   value={editing.description || ""}
                   onChange={(e) => setEditing({ ...editing, description: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-steel mb-1">
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
                   Specifications (comma-separated list)
                 </label>
                 <input
                   placeholder="Rubber tracks, Hydraulic breaker, Zero tail-swing"
                   value={specsInput}
                   onChange={(e) => setSpecsInput(e.target.value)}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none focus:ring-2 focus:ring-flame/40"
                 />
               </div>
 
@@ -191,13 +202,13 @@ export default function EquipmentManager({ equipment }: { equipment: Equipment[]
                   placeholder="Or enter Image URL manually"
                   value={editing.image_url || ""}
                   onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                  className="w-full rounded-sm border border-steel-light/50 px-3 py-2 text-sm font-mono text-xs mt-1"
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3 py-2 font-mono text-xs text-chalk placeholder:text-steel-light mt-2"
                 />
               </div>
 
-              {error && <p className="text-sm font-medium text-orange-hover">{error}</p>}
+              {error && <p className="border border-flame bg-flame/10 p-3 font-tech text-xs text-flame font-bold">{error}</p>}
 
-              <div className="mt-2 flex justify-end gap-2">
+              <div className="mt-4 flex justify-end gap-3 border-t border-slurry/40 pt-4">
                 <button type="button" onClick={() => setEditing(null)} className="btn-secondary">
                   Cancel
                 </button>

@@ -6,9 +6,9 @@ import { updateCommentStatus, deleteComment } from "@/lib/actions/admin";
 import type { Comment, CommentStatus } from "@/lib/types";
 
 const STATUS_STYLES: Record<CommentStatus, string> = {
-  pending: "bg-orange-soft text-orange-hover border-orange/30",
-  approved: "bg-mtnGreen-soft text-mtnGreen border-mtnGreen/30",
-  rejected: "bg-steel-light/30 text-steel border-steel-light/40",
+  pending: "bg-flame text-white font-bold border-flame",
+  approved: "bg-mtnGreen text-white font-bold border-mtnGreen",
+  rejected: "bg-slurry/40 text-steel-light font-bold border-slurry/60",
 };
 
 export default function CommentsTable({
@@ -27,16 +27,16 @@ export default function CommentsTable({
 
   if (comments.length === 0) {
     return (
-      <p className="rounded-sm border border-dashed border-steel-light/50 bg-white p-8 text-center text-sm text-steel">
+      <p className="border-2 border-dashed border-slurry/50 bg-aggregate-deep p-8 text-center font-body text-sm text-steel-light">
         No comments submitted yet. Comments submitted on news updates or projects will appear here for moderation.
       </p>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-sm border border-steel-light/30 bg-white shadow-sm">
+    <div className="overflow-x-auto border-2 border-slurry/50 bg-aggregate-deep shadow-[3px_3px_0px_#0F1115]">
       <table className="w-full min-w-[800px] text-left text-sm">
-        <thead className="border-b border-steel-light/30 bg-fog text-xs uppercase tracking-wide text-steel">
+        <thead className="border-b-2 border-slurry/50 bg-slurry/20 font-tech text-xs uppercase tracking-wider text-flame">
           <tr>
             <th className="px-4 py-3">Source / Target</th>
             <th className="px-4 py-3">Author</th>
@@ -46,7 +46,7 @@ export default function CommentsTable({
             <th className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slurry/30">
           {comments.map((item) => {
             const isPost = !!item.post_id;
             const targetTitle = isPost
@@ -54,33 +54,33 @@ export default function CommentsTable({
               : item.projects?.title || "Project";
 
             return (
-              <tr key={item.id} className="border-b border-steel-light/20 align-top last:border-0">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-1.5 font-medium text-xs text-charcoal">
+              <tr key={item.id} className="align-top hover:bg-slurry/10 transition-colors">
+                <td className="px-4 py-3.5">
+                  <div className="flex items-center gap-1.5 font-tech text-xs uppercase font-bold text-chalk">
                     {isPost ? (
-                      <span className="inline-flex items-center gap-1 rounded bg-orange-soft px-1.5 py-0.5 text-[10px] font-mono uppercase text-orange-hover">
+                      <span className="inline-flex items-center gap-1 border border-flame/40 bg-flame/10 px-2 py-0.5 font-tech text-[10px] font-bold uppercase text-flame">
                         <Newspaper size={11} /> Post
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded bg-fog border border-steel-light/30 px-1.5 py-0.5 text-[10px] font-mono uppercase text-steel">
+                      <span className="inline-flex items-center gap-1 border border-slurry/60 bg-slurry/20 px-2 py-0.5 font-tech text-[10px] font-bold uppercase text-chalk">
                         <Briefcase size={11} /> Project
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-xs text-charcoal font-medium line-clamp-1">{targetTitle}</p>
+                  <p className="mt-1 font-body text-xs font-semibold text-chalk line-clamp-1">{targetTitle}</p>
                 </td>
-                <td className="px-4 py-3 font-medium text-charcoal text-xs whitespace-nowrap">
+                <td className="px-4 py-3.5 font-display text-sm uppercase font-bold text-chalk whitespace-nowrap">
                   {item.author_name}
                 </td>
-                <td className="max-w-xs px-4 py-3 text-steel text-xs">
-                  <p className="line-clamp-3">{item.message}</p>
+                <td className="max-w-xs px-4 py-3.5 font-body text-xs text-steel-light">
+                  <p className="line-clamp-3 leading-relaxed">{item.message}</p>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-steel text-xs font-mono">
+                <td className="whitespace-nowrap px-4 py-3.5 font-mono text-xs text-steel-light">
                   {new Date(item.created_at).toLocaleDateString("en-CA")}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
+                <td className="whitespace-nowrap px-4 py-3.5">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${STATUS_STYLES[item.status]}`}
+                    className={`inline-flex items-center gap-1 border px-2.5 py-1 font-tech text-[11px] uppercase tracking-wider ${STATUS_STYLES[item.status]}`}
                   >
                     {item.status === "pending" && <Clock size={11} />}
                     {item.status === "approved" && <Check size={11} />}
@@ -88,7 +88,7 @@ export default function CommentsTable({
                     {item.status}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right">
+                <td className="whitespace-nowrap px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-1.5">
                     {item.status !== "approved" && (
                       <button
@@ -99,7 +99,7 @@ export default function CommentsTable({
                             updateCommentStatus(item.id, "approved");
                           })
                         }
-                        className="flex items-center gap-1 rounded bg-mtnGreen px-2 py-1 text-xs font-semibold text-white hover:bg-mtnGreen-soft hover:text-mtnGreen transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1 border border-mtnGreen bg-mtnGreen px-2.5 py-1 font-tech text-xs uppercase font-bold text-white hover:bg-emerald-600 transition-colors disabled:opacity-50"
                         title="Approve comment"
                       >
                         <Check size={13} /> Approve
@@ -115,7 +115,7 @@ export default function CommentsTable({
                             updateCommentStatus(item.id, "rejected");
                           })
                         }
-                        className="flex items-center gap-1 rounded bg-steel-light/20 px-2 py-1 text-xs font-semibold text-steel hover:bg-orange hover:text-white transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1 border border-slurry/60 bg-slurry/30 px-2.5 py-1 font-tech text-xs uppercase font-bold text-chalk hover:border-flame hover:text-flame transition-colors disabled:opacity-50"
                         title="Reject comment"
                       >
                         <X size={13} /> Reject
@@ -126,10 +126,10 @@ export default function CommentsTable({
                       type="button"
                       disabled={isPending}
                       onClick={() => handleDelete(item.id)}
-                      className="rounded p-1 text-steel hover:bg-orange-soft hover:text-orange-hover transition-colors disabled:opacity-50"
+                      className="flex h-7 w-7 items-center justify-center border border-flame/40 bg-flame/10 text-flame hover:bg-flame hover:text-white transition-colors disabled:opacity-50"
                       title="Delete comment"
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </td>
