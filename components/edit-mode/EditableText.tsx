@@ -23,8 +23,9 @@ export default function EditableText({
   multiline = true,
 }: EditableTextProps) {
   const { isEditMode } = useEditMode();
-  const [text, setText] = useState(initialValue);
-  const [draftText, setDraftText] = useState(initialValue);
+  const normalizedInitial = (initialValue || "").replace(/\\n/g, "\n");
+  const [text, setText] = useState(normalizedInitial);
+  const [draftText, setDraftText] = useState(normalizedInitial);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -32,8 +33,9 @@ export default function EditableText({
 
   // Sync state if initialValue changes
   useEffect(() => {
-    setText(initialValue);
-    setDraftText(initialValue);
+    const norm = (initialValue || "").replace(/\\n/g, "\n");
+    setText(norm);
+    setDraftText(norm);
   }, [initialValue]);
 
   // Focus and select textarea on edit start

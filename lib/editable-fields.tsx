@@ -15,7 +15,8 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     page: "Homepage",
     multiline: true,
     render: (text) => {
-      const parts = text.split("\n");
+      const normalized = (text || "").replace(/\\n/g, "\n");
+      const parts = normalized.split("\n");
       return (
         <h1 className="mt-4 max-w-4xl font-display text-5xl font-bold uppercase tracking-tight text-chalk leading-none sm:text-6xl md:text-7xl lg:text-8xl">
           {parts[0]}
@@ -36,7 +37,7 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     multiline: true,
     render: (text) => (
       <p className="mt-6 max-w-2xl font-body text-base text-steel-light leading-relaxed sm:text-lg md:text-xl">
-        {text}
+        {(text || "").replace(/\\n/g, "\n")}
       </p>
     ),
   },
@@ -46,7 +47,8 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     page: "About",
     multiline: true,
     render: (text) => {
-      const paragraphs = text.split("\n\n").filter(Boolean);
+      const normalized = (text || "").replace(/\\n/g, "\n");
+      const paragraphs = normalized.split("\n\n").filter(Boolean);
       return (
         <>
           {paragraphs.map((p, idx) => (
@@ -64,7 +66,7 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
     page: "About",
     multiline: true,
     render: (text) => (
-      <p className="mt-4 leading-relaxed text-steel">{text}</p>
+      <p className="mt-4 leading-relaxed text-steel">{(text || "").replace(/\\n/g, "\n")}</p>
     ),
   },
 };
@@ -76,5 +78,5 @@ export const EDITABLE_FIELDS: Record<string, EditableFieldConfig> = {
 export function renderEditableField(key: string, text: string): ReactNode {
   const config = EDITABLE_FIELDS[key];
   if (config?.render) return config.render(text);
-  return <span>{text}</span>;
+  return <span>{(text || "").replace(/\\n/g, "\n")}</span>;
 }

@@ -295,9 +295,9 @@ values
 
 insert into site_content (key, value)
 values
-  ('hero_tagline', 'Precision Cutting.\nSolid Results.'),
+  ('hero_tagline', E'Precision Cutting.\nSolid Results.'),
   ('hero_subtext', 'Concrete cutting, core drilling, and demolition for residential, commercial, and industrial projects across Calgary and Western Alberta — backed by state-of-the-art equipment and 25+ years of hands-on experience.'),
-  ('about_story', 'Mountain View Concrete Cutting Inc. (2549952 Alberta Inc.) was established more than 25 years ago in Western Alberta. What started as a small crew with a handful of saws has grown into a trusted contractor serving residential, commercial, and industrial clients across Calgary and the surrounding region.\n\nWe''ve built our reputation the same way for two and a half decades: showing up on time, cutting it right the first time, and communicating clearly from quote to cleanup.'),
+  ('about_story', E'Mountain View Concrete Cutting Inc. (2549952 Alberta Inc.) was established more than 25 years ago in Western Alberta. What started as a small crew with a handful of saws has grown into a trusted contractor serving residential, commercial, and industrial clients across Calgary and the surrounding region.\n\nWe''ve built our reputation the same way for two and a half decades: showing up on time, cutting it right the first time, and communicating clearly from quote to cleanup.'),
   ('about_mission', 'To deliver safe, precise, and dependable concrete cutting, drilling, and removal services using state-of-the-art equipment and proven techniques — so every job is completed efficiently and to the highest industry standard.')
 on conflict (key) do nothing;
 
