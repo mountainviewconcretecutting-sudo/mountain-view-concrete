@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "25+ years of hands-on concrete cutting, core drilling, and demolition experience. Proudly serving Calgary, Western Alberta, and surrounding communities since the company's founding.",
 };
 
+const DEFAULT_HEADLINE = "BUILT ON HARD WORK, RELIABILITY, AND CRAFTSMANSHIP.";
+
 const DEFAULT_STORY =
   "Mountain View Concrete Cutting Inc. (2549952 Alberta Inc.) was established more than 25 years ago in Western Alberta. What started as a small crew with a handful of saws has grown into a trusted contractor serving residential, commercial, and industrial clients across Calgary and the surrounding region.\n\nWe've built our reputation the same way for two and a half decades: showing up on time, cutting it right the first time, and communicating clearly from quote to cleanup.";
 
@@ -19,7 +21,8 @@ const DEFAULT_MISSION =
 
 export default async function AboutPage() {
   const [content, isAdmin] = await Promise.all([
-    getSiteContents(["about_story", "about_mission"], {
+    getSiteContents(["about_headline", "about_story", "about_mission"], {
+      about_headline: DEFAULT_HEADLINE,
       about_story: DEFAULT_STORY,
       about_mission: DEFAULT_MISSION,
     }),
@@ -33,9 +36,12 @@ export default async function AboutPage() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// ABOUT US"}
           </span>
-          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
-            BUILT ON HARD WORK, RELIABILITY, AND CRAFTSMANSHIP.
-          </h1>
+          <EditableText
+            contentKey="about_headline"
+            initialValue={content.about_headline}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
       </section>
 

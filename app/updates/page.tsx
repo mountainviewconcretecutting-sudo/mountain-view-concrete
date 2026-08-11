@@ -33,8 +33,19 @@ async function getPublishedPosts(): Promise<Post[]> {
   }
 }
 
+import EditableText from "@/components/edit-mode/EditableText";
+import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
+
+const DEFAULT_UPDATES_HERO_TITLE = "COMPANY UPDATES";
+
 export default async function UpdatesPage() {
-  const posts = await getPublishedPosts();
+  const [posts, content, isAdmin] = await Promise.all([
+    getPublishedPosts(),
+    getSiteContents(["updates_hero_title"], {
+      updates_hero_title: DEFAULT_UPDATES_HERO_TITLE,
+    }),
+    getIsAdmin(),
+  ]);
 
   return (
     <>
@@ -43,9 +54,12 @@ export default async function UpdatesPage() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// NEWS & ANNOUNCEMENTS"}
           </span>
-          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
-            COMPANY UPDATES
-          </h1>
+          <EditableText
+            contentKey="updates_hero_title"
+            initialValue={content.updates_hero_title}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
       </section>
 

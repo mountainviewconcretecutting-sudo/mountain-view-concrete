@@ -25,10 +25,21 @@ function getServiceIcon(iconName: string | null) {
   return Scissors;
 }
 
+import EditableText from "@/components/edit-mode/EditableText";
+import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
+
+const DEFAULT_SERVICES_HERO_TITLE = "CONCRETE CUTTING & PROPERTY SERVICES";
+const DEFAULT_SERVICES_HERO_SUBTEXT = "Serving Calgary, Airdrie, Okotoks, Chestermere, Cochrane, and surrounding Western Alberta communities.";
+
 export default async function ServicesPage() {
-  const [services, equipmentList] = await Promise.all([
+  const [services, equipmentList, content, isAdmin] = await Promise.all([
     getServices(),
     getEquipment(),
+    getSiteContents(["services_hero_title", "services_hero_subtext"], {
+      services_hero_title: DEFAULT_SERVICES_HERO_TITLE,
+      services_hero_subtext: DEFAULT_SERVICES_HERO_SUBTEXT,
+    }),
+    getIsAdmin(),
   ]);
 
   const cuttingServices = services.filter((s) => s.slug !== "property-services");
@@ -41,12 +52,18 @@ export default async function ServicesPage() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// WHAT WE DO"}
           </span>
-          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
-            CONCRETE CUTTING &amp; PROPERTY SERVICES
-          </h1>
-          <p className="mt-4 font-body text-base text-steel-light leading-relaxed max-w-2xl">
-            Serving Calgary, Airdrie, Okotoks, Chestermere, Cochrane, and surrounding Western Alberta communities.
-          </p>
+          <EditableText
+            contentKey="services_hero_title"
+            initialValue={content.services_hero_title}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
+          <EditableText
+            contentKey="services_hero_subtext"
+            initialValue={content.services_hero_subtext}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
       </section>
 

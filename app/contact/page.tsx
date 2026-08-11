@@ -21,7 +21,42 @@ const SERVICE_COMMUNITIES = [
   "Red Deer & Region",
 ];
 
-export default function ContactPage() {
+import EditableText from "@/components/edit-mode/EditableText";
+import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
+
+export const dynamic = "force-dynamic";
+
+const DEFAULT_CONTACT_HEADLINE = "CONTACT US";
+const DEFAULT_CONTACT_SUBTEXT = "Got a project in mind or need emergency concrete cutting services? Reach out to our team directly or send us your project details below.";
+
+export default async function ContactPage() {
+  const [content, isAdmin] = await Promise.all([
+    getSiteContents(
+      [
+        "contact_headline",
+        "contact_subtext",
+        "contact_phone",
+        "contact_email",
+        "contact_address",
+        "contact_hours",
+        "contact_coverage_title",
+        "contact_coverage_subtext",
+      ],
+      {
+        contact_headline: DEFAULT_CONTACT_HEADLINE,
+        contact_subtext: DEFAULT_CONTACT_SUBTEXT,
+        contact_phone: "825-734-1419",
+        contact_email: "crafuse0@gmail.com",
+        contact_address: "3904 3A Street NE, Calgary, Alberta T2E 6R4",
+        contact_hours: "24/7 Emergency Service Available",
+        contact_coverage_title: "CALGARY & WESTERN ALBERTA",
+        contact_coverage_subtext:
+          "We dispatch mobile concrete cutting crews across Calgary and surrounding communities:",
+      }
+    ),
+    getIsAdmin(),
+  ]);
+
   return (
     <>
       <section className="border-b-4 border-slurry/40 bg-aggregate-deep py-16 text-chalk md:py-24">
@@ -29,9 +64,18 @@ export default function ContactPage() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// GET IN TOUCH"}
           </span>
-          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
-            CONTACT US
-          </h1>
+          <EditableText
+            contentKey="contact_headline"
+            initialValue={content.contact_headline}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
+          <EditableText
+            contentKey="contact_subtext"
+            initialValue={content.contact_subtext}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
       </section>
 
@@ -43,32 +87,48 @@ export default function ContactPage() {
                 <Phone size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
                   <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Phone</p>
-                  <a href="tel:8257341419" className="font-body text-base text-steel-light hover:text-flame transition-colors font-bold">
-                    825-734-1419
-                  </a>
+                  <EditableText
+                    contentKey="contact_phone"
+                    initialValue={content.contact_phone}
+                    isAdmin={isAdmin}
+                    multiline={false}
+                  />
                 </div>
               </li>
               <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
                 <Mail size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
                   <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Email</p>
-                  <a href="mailto:crafuse0@gmail.com" className="font-body text-base text-steel-light hover:text-flame transition-colors font-bold">
-                    crafuse0@gmail.com
-                  </a>
+                  <EditableText
+                    contentKey="contact_email"
+                    initialValue={content.contact_email}
+                    isAdmin={isAdmin}
+                    multiline={false}
+                  />
                 </div>
               </li>
               <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
                 <MapPin size={24} className="mt-0.5 text-flame shrink-0" aria-hidden="true" />
                 <div>
                   <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Address</p>
-                  <p className="font-body text-sm text-steel-light">3904 3A Street NE, Calgary, Alberta T2E 6R4</p>
+                  <EditableText
+                    contentKey="contact_address"
+                    initialValue={content.contact_address}
+                    isAdmin={isAdmin}
+                    multiline={true}
+                  />
                 </div>
               </li>
               <li className="flex gap-4 border-2 border-slurry/50 bg-aggregate-deep p-5 shadow-[3px_3px_0px_#0F1115]">
                 <Clock size={24} className="mt-0.5 text-ochre shrink-0" aria-hidden="true" />
                 <div>
                   <p className="font-tech text-xs font-bold uppercase tracking-wider text-chalk">Availability</p>
-                  <p className="font-tech text-sm text-ochre font-bold">24/7 Emergency Service Available</p>
+                  <EditableText
+                    contentKey="contact_hours"
+                    initialValue={content.contact_hours}
+                    isAdmin={isAdmin}
+                    multiline={false}
+                  />
                 </div>
               </li>
             </ul>
@@ -77,10 +137,18 @@ export default function ContactPage() {
               <span className="font-tech text-xs font-bold uppercase tracking-[0.2em] text-flame">
                 {"// SERVICE COVERAGE AREA"}
               </span>
-              <h3 className="mt-1 font-display text-2xl uppercase tracking-wide text-chalk">CALGARY &amp; WESTERN ALBERTA</h3>
-              <p className="mt-2 font-body text-xs text-steel-light leading-relaxed">
-                We dispatch mobile concrete cutting crews across Calgary and surrounding communities:
-              </p>
+              <EditableText
+                contentKey="contact_coverage_title"
+                initialValue={content.contact_coverage_title}
+                isAdmin={isAdmin}
+                multiline={false}
+              />
+              <EditableText
+                contentKey="contact_coverage_subtext"
+                initialValue={content.contact_coverage_subtext}
+                isAdmin={isAdmin}
+                multiline={true}
+              />
               <ul className="mt-4 grid grid-cols-2 gap-2 font-tech text-xs font-bold uppercase tracking-wider text-steel-light">
                 {SERVICE_COMMUNITIES.map((city) => (
                   <li key={city} className="flex items-center gap-1.5 border border-slurry/40 bg-slurry/20 p-2">

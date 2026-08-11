@@ -29,11 +29,37 @@ async function getApprovedTestimonials(): Promise<Testimonial[]> {
 
 export default async function HomePage() {
   const [content, isAdmin, testimonials] = await Promise.all([
-    getSiteContents(["hero_tagline", "hero_subtext"], {
-      hero_tagline: "Precision Cutting.\nSolid Results.",
-      hero_subtext:
-        "Concrete cutting, core drilling, and demolition for residential, commercial, and industrial projects across Calgary and Western Alberta — backed by state-of-the-art equipment and 25+ years of hands-on experience.",
-    }),
+    getSiteContents(
+      [
+        "hero_tagline",
+        "hero_subtext",
+        "sector_title",
+        "sector_res_copy",
+        "sector_com_copy",
+        "sector_ind_copy",
+        "cta_title",
+        "cta_subtext",
+        "services_preview_title",
+        "projects_preview_title",
+      ],
+      {
+        hero_tagline: "Precision Cutting.\nSolid Results.",
+        hero_subtext:
+          "Concrete cutting, core drilling, and demolition for residential, commercial, and industrial projects across Calgary and Western Alberta — backed by state-of-the-art equipment and 25+ years of hands-on experience.",
+        sector_title: "BUILT FOR EVERY SCALE OF PROJECT",
+        sector_res_copy:
+          "Basement retrofits, drainage cuts, and small-scale demolition handled cleanly and on schedule.",
+        sector_com_copy:
+          "Tenant improvements, mechanical penetrations, and structural openings for active commercial sites.",
+        sector_ind_copy:
+          "Heavy wall sawing, large-diameter core drilling, and haul-away for industrial-scale projects.",
+        cta_title: "READY TO GET THE JOB CUT, DRILLED, OR CLEARED?",
+        cta_subtext:
+          "Call now for emergency work, or send project details and we'll get back to you within one business day.",
+        services_preview_title: "OUR CORE SERVICES",
+        projects_preview_title: "FEATURED PROJECTS",
+      }
+    ),
     getIsAdmin(),
     getApprovedTestimonials(),
   ]);
@@ -46,11 +72,11 @@ export default async function HomePage() {
         isAdmin={isAdmin}
       />
       <TrustBadges />
-      <SectorOverview />
-      <ServicesPreview />
-      <FeaturedProjectsPreview />
+      <SectorOverview isAdmin={isAdmin} content={content} />
+      <ServicesPreview isAdmin={isAdmin} content={content} />
+      <FeaturedProjectsPreview isAdmin={isAdmin} content={content} />
       <TestimonialsSection testimonials={testimonials} />
-      <CtaBand />
+      <CtaBand isAdmin={isAdmin} content={content} />
     </>
   );
 }

@@ -3,9 +3,23 @@
 import { useState } from "react";
 import { Phone, FileText } from "lucide-react";
 import QuoteModal from "@/components/QuoteModal";
+import EditableText from "@/components/edit-mode/EditableText";
 
-export default function CtaBand() {
+interface CtaBandProps {
+  isAdmin?: boolean;
+  content?: {
+    cta_title?: string;
+    cta_subtext?: string;
+  };
+}
+
+export default function CtaBand({
+  isAdmin = false,
+  content = {},
+}: CtaBandProps) {
   const [quoteOpen, setQuoteOpen] = useState(false);
+  const title = content.cta_title || "READY TO GET THE JOB CUT, DRILLED, OR CLEARED?";
+  const subtext = content.cta_subtext || "Call now for emergency work, or send project details and we'll get back to you within one business day.";
 
   return (
     <section className="relative border-b-4 border-flame bg-aggregate-deep py-16 text-chalk md:py-20">
@@ -14,12 +28,18 @@ export default function CtaBand() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// READY TO START"}
           </span>
-          <h2 className="mt-1 font-display text-3xl uppercase tracking-tight text-chalk md:text-4xl">
-            READY TO GET THE JOB CUT, DRILLED, OR CLEARED?
-          </h2>
-          <p className="mt-2 max-w-xl font-body text-sm text-steel-light leading-relaxed">
-            Call now for emergency work, or send project details and we&apos;ll get back to you within one business day.
-          </p>
+          <EditableText
+            contentKey="cta_title"
+            initialValue={title}
+            isAdmin={isAdmin}
+            multiline={false}
+          />
+          <EditableText
+            contentKey="cta_subtext"
+            initialValue={subtext}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
           <a href="tel:8257341419" className="btn-primary text-base font-display tracking-wider justify-center">

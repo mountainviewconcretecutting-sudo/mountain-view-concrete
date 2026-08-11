@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Scissors, CircleDot, HardHat, Wrench, ArrowRight } from "lucide-react";
+import EditableText from "@/components/edit-mode/EditableText";
 
 const SERVICES = [
   {
@@ -28,16 +31,31 @@ const SERVICES = [
   },
 ];
 
-export default function ServicesPreview() {
+interface ServicesPreviewProps {
+  isAdmin?: boolean;
+  content?: {
+    services_preview_title?: string;
+  };
+}
+
+export default function ServicesPreview({
+  isAdmin = false,
+  content = {},
+}: ServicesPreviewProps) {
+  const title = content.services_preview_title || "OUR CORE SERVICES";
+
   return (
     <section className="relative bg-aggregate-deep py-20 text-chalk border-b-2 border-slurry/40">
       <div className="container-page">
         <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
           {"// WHAT WE DO"}
         </span>
-        <h2 className="mt-2 max-w-xl font-display text-4xl uppercase tracking-tight text-chalk md:text-5xl">
-          OUR CORE SERVICES
-        </h2>
+        <EditableText
+          contentKey="services_preview_title"
+          initialValue={title}
+          isAdmin={isAdmin}
+          multiline={false}
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map(({ icon: Icon, title, copy, href }) => (

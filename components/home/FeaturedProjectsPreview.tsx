@@ -2,9 +2,21 @@ import Link from "next/link";
 import { ArrowRight, ImageOff } from "lucide-react";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import { getFeaturedProjects } from "@/lib/actions/projects";
+import EditableText from "@/components/edit-mode/EditableText";
 
-export default async function FeaturedProjectsPreview() {
+interface FeaturedProjectsPreviewProps {
+  isAdmin?: boolean;
+  content?: {
+    projects_preview_title?: string;
+  };
+}
+
+export default async function FeaturedProjectsPreview({
+  isAdmin = false,
+  content = {},
+}: FeaturedProjectsPreviewProps) {
   const projects = await getFeaturedProjects();
+  const title = content.projects_preview_title || "FEATURED PROJECTS";
 
   return (
     <section className="bg-aggregate py-16 md:py-24 border-b-2 border-slurry/40">
@@ -14,9 +26,12 @@ export default async function FeaturedProjectsPreview() {
             <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
               {"// RECENT WORK"}
             </span>
-            <h2 className="mt-2 font-display text-4xl uppercase tracking-tight text-chalk md:text-5xl">
-              FEATURED PROJECTS
-            </h2>
+            <EditableText
+              contentKey="projects_preview_title"
+              initialValue={title}
+              isAdmin={isAdmin}
+              multiline={false}
+            />
           </div>
           <Link
             href="/projects"

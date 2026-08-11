@@ -52,11 +52,20 @@ async function getApprovedProjectComments(): Promise<Comment[]> {
   }
 }
 
+import EditableText from "@/components/edit-mode/EditableText";
+import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
+
+const DEFAULT_PROJECTS_HERO_TITLE = "FEATURED PROJECTS";
+
 export default async function ProjectsPage() {
-  const [projects, testimonials, comments] = await Promise.all([
+  const [projects, testimonials, comments, content, isAdmin] = await Promise.all([
     getAllProjects(),
     getApprovedTestimonials(),
     getApprovedProjectComments(),
+    getSiteContents(["projects_hero_title"], {
+      projects_hero_title: DEFAULT_PROJECTS_HERO_TITLE,
+    }),
+    getIsAdmin(),
   ]);
 
   return (
@@ -66,9 +75,12 @@ export default async function ProjectsPage() {
           <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
             {"// RECENT WORK"}
           </span>
-          <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
-            FEATURED PROJECTS
-          </h1>
+          <EditableText
+            contentKey="projects_hero_title"
+            initialValue={content.projects_hero_title}
+            isAdmin={isAdmin}
+            multiline={true}
+          />
         </div>
       </section>
 
