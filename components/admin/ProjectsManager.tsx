@@ -80,6 +80,11 @@ export default function ProjectsManager({ projects }: { projects: Project[] }) {
               </div>
             </div>
             <p className="mt-2 font-body text-sm text-steel-light line-clamp-3">{project.summary}</p>
+            {project.location && (
+              <p className="mt-2 font-tech text-xs uppercase font-bold text-steel-light">
+                📍 {project.location}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -105,6 +110,18 @@ export default function ProjectsManager({ projects }: { projects: Project[] }) {
                   placeholder="Title"
                   value={editing.title}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+                  className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block font-tech text-xs font-bold uppercase tracking-wider text-chalk">
+                  Location (e.g., Calgary, AB)
+                </label>
+                <input
+                  placeholder="Location (e.g., Calgary, AB)"
+                  value={editing.location || ""}
+                  onChange={(e) => setEditing({ ...editing, location: e.target.value })}
                   className="w-full border-2 border-slurry/60 bg-aggregate px-3.5 py-2.5 font-body text-sm text-chalk placeholder:text-steel-light focus:border-flame focus:outline-none"
                 />
               </div>

@@ -169,7 +169,7 @@ const projectSchema = z.object({
   ]),
   summary: z.string().min(10).max(500),
   image_url: imagePathOrUrlSchema,
-  location: z.string().max(150).optional(),
+  location: z.string().max(150).optional().nullable(),
   is_featured: z.boolean(),
   sort_order: z.coerce.number().int().min(0),
 });
