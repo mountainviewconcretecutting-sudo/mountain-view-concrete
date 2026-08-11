@@ -56,7 +56,11 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   if (!post) {
     return { title: "Post Not Found" };
   }
-  const description = post.body.slice(0, 160).replace(/\n/g, " ");
+  const raw = post.body.replace(/\n/g, " ");
+  const description =
+    raw.length <= 155
+      ? raw
+      : raw.slice(0, 155).replace(/\s+\S*$/, "") + "...";
   return {
     title: post.title,
     description,

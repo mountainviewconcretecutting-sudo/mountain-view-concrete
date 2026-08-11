@@ -6,8 +6,9 @@ import { Check } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "About Us",
-  description: "25+ years of concrete cutting expertise in Calgary and Western Alberta.",
+  title: "About Us — Calgary Concrete Cutting Experts",
+  description:
+    "25+ years of hands-on concrete cutting, core drilling, and demolition experience. Proudly serving Calgary, Western Alberta, and surrounding communities since the company's founding.",
 };
 
 const DEFAULT_STORY =

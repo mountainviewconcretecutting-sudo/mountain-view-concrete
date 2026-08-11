@@ -71,6 +71,14 @@ export const metadata: Metadata = {
     siteName: "Mountain View Concrete Cutting Inc.",
     locale: "en_CA",
     type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/images/hero/hero-concrete-sawing.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Diamond blade concrete sawing — Mountain View Concrete Cutting Inc.",
+      },
+    ],
   },
   icons: {
     icon: "/icon.png",
@@ -136,25 +144,36 @@ export default async function RootLayout({
       { "@type": "AdministrativeArea", name: "Cochrane" },
       { "@type": "AdministrativeArea", name: "Western Alberta" },
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "emergency",
-      telephone: "825-734-1419",
-      hoursAvailable: {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        opens: "00:00",
-        closes: "23:59",
+    priceRange: "$$",
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "emergency",
+        telephone: "825-734-1419",
+        hoursAvailable: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          opens: "00:00",
+          closes: "23:59",
+        },
+        areaServed: "Calgary and Western Alberta",
+        availableLanguage: "English",
       },
-      areaServed: "Calgary and Western Alberta",
-      availableLanguage: "English",
-    },
+      {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        telephone: "825-734-1419",
+        areaServed: "Calgary and Western Alberta",
+        availableLanguage: "English",
+      },
+    ],
     knowsAbout: [
       "Wall Sawing",
       "Slab Sawing",
       "Core Drilling",
       "Concrete Demolition & Removal",
     ],
+
   };
 
   return (

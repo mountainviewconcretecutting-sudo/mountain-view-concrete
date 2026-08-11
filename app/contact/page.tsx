@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import ContactFormSection from "@/components/contact/ContactFormSection";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact — Calgary & Western Alberta",
   description:
     "Call, email, or request a quote from Mountain View Concrete Cutting Inc. Serving Calgary and Western Alberta, 24/7.",
 };

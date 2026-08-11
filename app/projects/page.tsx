@@ -8,8 +8,9 @@ import type { Project, Testimonial, Comment } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Featured Projects",
-  description: "Recent residential, commercial, and industrial concrete cutting projects.",
+  title: "Featured Projects — Calgary Concrete Cutting",
+  description:
+    "Browse completed residential, commercial, and industrial concrete cutting projects across Calgary and Western Alberta. Request a quote for your project today.",
 };
 
 async function getApprovedTestimonials(): Promise<Testimonial[]> {

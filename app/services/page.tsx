@@ -44,6 +44,9 @@ export default async function ServicesPage() {
           <h1 className="mt-2 max-w-3xl font-display text-5xl font-bold uppercase tracking-tight text-chalk md:text-6xl lg:text-7xl leading-none">
             CONCRETE CUTTING &amp; PROPERTY SERVICES
           </h1>
+          <p className="mt-4 font-body text-base text-steel-light leading-relaxed max-w-2xl">
+            Serving Calgary, Airdrie, Okotoks, Chestermere, Cochrane, and surrounding Western Alberta communities.
+          </p>
         </div>
       </section>
 
