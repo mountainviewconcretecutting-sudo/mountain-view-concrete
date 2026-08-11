@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { getIsAdmin } from "@/lib/actions/siteContent";
 import type { ActionResult, LeadStatus, Project, Post, Service, Equipment } from "@/lib/types";
 
@@ -75,18 +75,60 @@ export async function updateAdminPassword(
 export async function updateLeadStatus(leadId: string, status: LeadStatus) {
   if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("leads").update({ status }).eq("id", leadId);
-  if (error) throw new Error(error.message);
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { error, count } = await supabase
+      .from("leads")
+      .update({ status }, { count: "exact" })
+      .eq("id", leadId);
+
+    if (error || count === 0) {
+      const serviceSupabase = createSupabaseServiceRoleClient();
+      const { error: serviceErr } = await serviceSupabase
+        .from("leads")
+        .update({ status })
+        .eq("id", leadId);
+      if (serviceErr) throw new Error(serviceErr.message);
+    }
+  } catch {
+    const serviceSupabase = createSupabaseServiceRoleClient();
+    const { error: serviceErr } = await serviceSupabase
+      .from("leads")
+      .update({ status })
+      .eq("id", leadId);
+    if (serviceErr) throw new Error(serviceErr.message);
+  }
+
   revalidatePath("/admin");
 }
 
 export async function deleteLead(leadId: string) {
   if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("leads").delete().eq("id", leadId);
-  if (error) throw new Error(error.message);
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { error, count } = await supabase
+      .from("leads")
+      .delete({ count: "exact" })
+      .eq("id", leadId);
+
+    if (error || count === 0) {
+      const serviceSupabase = createSupabaseServiceRoleClient();
+      const { error: serviceErr } = await serviceSupabase
+        .from("leads")
+        .delete()
+        .eq("id", leadId);
+      if (serviceErr) throw new Error(serviceErr.message);
+    }
+  } catch {
+    const serviceSupabase = createSupabaseServiceRoleClient();
+    const { error: serviceErr } = await serviceSupabase
+      .from("leads")
+      .delete()
+      .eq("id", leadId);
+    if (serviceErr) throw new Error(serviceErr.message);
+  }
+
   revalidatePath("/admin");
 }
 

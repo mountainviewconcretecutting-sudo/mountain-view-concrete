@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useTransition, useOptimistic } from "react";
 import { Trash2 } from "lucide-react";
 import { updateLeadStatus, deleteLead } from "@/lib/actions/admin";
 import { SERVICE_TYPE_LABELS, type Lead, type LeadStatus } from "@/lib/types";
@@ -17,15 +17,20 @@ const STATUS_STYLES: Record<LeadStatus, string> = {
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const [isPending, startTransition] = useTransition();
+  const [optimisticLeads, setOptimisticLeads] = useOptimistic(
+    leads,
+    (current, deletedId: string) => current.filter((l) => l.id !== deletedId)
+  );
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`Are you sure you want to delete the quote request from "${name}"? This cannot be undone.`)) return;
     startTransition(() => {
+      setOptimisticLeads(id);
       deleteLead(id);
     });
   }
 
-  if (leads.length === 0) {
+  if (optimisticLeads.length === 0) {
     return (
       <p className="border-2 border-dashed border-slurry/50 bg-aggregate-deep p-8 text-center font-body text-sm text-steel-light">
         No quote requests yet. New submissions from the site will show up here.
@@ -48,7 +53,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-slurry/30">
-          {leads.map((lead) => (
+          {optimisticLeads.map((lead) => (
             <tr key={lead.id} className="align-top hover:bg-slurry/10 transition-colors">
               <td className="px-4 py-3.5 font-display text-base uppercase text-chalk font-bold">{lead.name}</td>
               <td className="px-4 py-3.5 text-steel-light font-body">

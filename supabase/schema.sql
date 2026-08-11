@@ -143,6 +143,10 @@ create policy "admins can update leads"
   using (is_admin())
   with check (is_admin());
 
+create policy "admins can delete leads"
+  on leads for delete
+  using (is_admin());
+
 -- admin_profiles: admins can see the staff list; nobody can self-promote.
 create policy "admins can view admin list"
   on admin_profiles for select
