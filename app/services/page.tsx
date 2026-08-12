@@ -43,7 +43,6 @@ export default async function ServicesPage() {
   ]);
 
   const cuttingServices = services.filter((s) => s.slug !== "property-services");
-  const propertyService = services.find((s) => s.slug === "property-services");
 
   return (
     <>
@@ -167,38 +166,6 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* Additional Property Services Section */}
-      {propertyService && (
-        <section
-          id="property-services"
-          className="scroll-mt-20 bg-aggregate py-16 text-chalk md:py-20 border-b-2 border-slurry/40"
-        >
-          <div className="container-page">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center border border-flame/40 bg-flame/10 text-flame shrink-0 mt-1">
-                <Wrench size={26} aria-hidden="true" />
-              </div>
-              <div>
-                <span className="font-tech text-xs font-bold uppercase tracking-[0.25em] text-flame">
-                  {"// ADDITIONAL CAPABILITIES"}
-                </span>
-                <h2 className="font-display text-4xl uppercase tracking-tight text-chalk">{propertyService.title}</h2>
-                <p className="mt-2 max-w-2xl font-body text-base text-steel-light leading-relaxed">{propertyService.description}</p>
-              </div>
-            </div>
-            {propertyService.spec_list && propertyService.spec_list.length > 0 && (
-              <ul className="mt-8 grid grid-cols-1 gap-x-8 gap-y-4 font-tech text-sm font-bold uppercase tracking-wider text-chalk sm:grid-cols-2 lg:grid-cols-3">
-                {propertyService.spec_list.map((item) => (
-                  <li key={item} className="border-b border-slurry/40 pb-3 flex items-center gap-2">
-                    <span className="text-flame">▶</span> {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </section>
-      )}
     </>
   );
 }

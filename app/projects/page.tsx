@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import TestimonialSectionWithForm from "@/components/projects/TestimonialSectionWithForm";
 import { getAllProjects } from "@/lib/actions/projects";
-import type { Project, Testimonial, Comment } from "@/lib/types";
+import type { Testimonial, Comment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 

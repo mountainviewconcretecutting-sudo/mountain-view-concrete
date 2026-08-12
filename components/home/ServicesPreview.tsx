@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Scissors, CircleDot, HardHat, Wrench, ArrowRight } from "lucide-react";
+import { Scissors, CircleDot, HardHat, ArrowRight } from "lucide-react";
 import EditableText from "@/components/edit-mode/EditableText";
 
 const SERVICES = [
@@ -22,12 +22,6 @@ const SERVICES = [
     title: "Demolition & Removal",
     copy: "Safe demolition, jackhammering, and full haul-away disposal.",
     href: "/services#demolition",
-  },
-  {
-    icon: Wrench,
-    title: "Property Services",
-    copy: "Line painting, welding, snow removal, and grounds maintenance.",
-    href: "/services#property-services",
   },
 ];
 
@@ -57,7 +51,7 @@ export default function ServicesPreview({
           multiline={false}
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map(({ icon: Icon, title, copy, href }) => (
             <Link
               key={title}
