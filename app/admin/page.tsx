@@ -16,15 +16,46 @@ import type { Lead, Project, Testimonial, Post, Comment, Service, Equipment, Gal
 
 export const dynamic = "force-dynamic";
 
+const GALLERY_MIGRATION_SQL = `create table if not exists gallery_images (
+  id uuid primary key default gen_random_uuid(),
+  image_url text not null,
+  alt_text text,
+  display_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists gallery_images_order_idx on gallery_images(display_order);
+
+alter table gallery_images enable row level security;
+
+create policy "public can read gallery images"
+  on gallery_images for select
+  using (true);
+
+create policy "admins can manage gallery images"
+  on gallery_images for all
+  using (is_admin())
+  with check (is_admin());`;
+
 /** Inline error banner shown in a dashboard section when its DB query fails. */
-function SectionError({ label }: { label: string }) {
+function SectionError({ label, sqlSnippet }: { label: string; sqlSnippet?: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-sm border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
-      <AlertTriangle size={16} className="shrink-0" aria-hidden="true" />
-      <span>
-        Unable to load <strong>{label}</strong> — please refresh the page or contact support if the
-        problem persists.
-      </span>
+    <div className="rounded-sm border border-red-400/60 bg-red-950/40 p-4 text-sm text-red-300 space-y-2">
+      <div className="flex items-center gap-2 font-bold text-red-200">
+        <AlertTriangle size={18} className="shrink-0 text-red-400" aria-hidden="true" />
+        <span>Unable to load {label}</span>
+      </div>
+      <p className="font-body text-xs text-red-300/90 leading-relaxed">
+        The database table for <strong className="text-chalk">{label}</strong> has not been created in Supabase yet.
+      </p>
+      {sqlSnippet && (
+        <details className="mt-2 border border-red-500/30 bg-black/40 p-3 font-mono text-[11px] text-red-200">
+          <summary className="cursor-pointer font-bold hover:text-white">View required Supabase SQL migration</summary>
+          <pre className="mt-2 whitespace-pre-wrap text-emerald-400 select-all overflow-x-auto p-2 bg-black/60 rounded">
+            {sqlSnippet}
+          </pre>
+        </details>
+      )}
     </div>
   );
 }
@@ -102,7 +133,7 @@ export default async function AdminDashboardPage() {
             Homepage Photo Gallery Carousel
           </h2>
           {galleryError ? (
-            <SectionError label="Gallery Images" />
+            <SectionError label="Gallery Images" sqlSnippet={GALLERY_MIGRATION_SQL} />
           ) : (
             <GalleryManager images={(galleryImages as GalleryImage[]) ?? []} />
           )}
@@ -121,10 +152,10 @@ export default async function AdminDashboardPage() {
 
         <section className="mt-14">
           <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
-            Service Catalogue Management
+            Services Catalog
           </h2>
           {servicesError ? (
-            <SectionError label="Service Catalogue" />
+            <SectionError label="Services" />
           ) : (
             <ServicesManager services={(services as Service[]) ?? []} />
           )}
@@ -132,7 +163,7 @@ export default async function AdminDashboardPage() {
 
         <section className="mt-14">
           <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
-            Machinery &amp; Fleet Equipment
+            Equipment Fleet Inventory
           </h2>
           {equipmentError ? (
             <SectionError label="Equipment" />
@@ -143,7 +174,7 @@ export default async function AdminDashboardPage() {
 
         <section className="mt-14">
           <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
-            Comments Moderation (Posts &amp; Projects)
+            Blog Comments Moderation
           </h2>
           {commentsError ? (
             <SectionError label="Comments" />
