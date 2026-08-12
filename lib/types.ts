@@ -148,3 +148,12 @@ export interface Equipment {
   updated_at: string;
 }
 
+export interface GalleryImage {
+  id: string;
+  image_url: string;
+  alt_text: string | null;
+  display_order: number;
+  created_at: string;
+}
+
+

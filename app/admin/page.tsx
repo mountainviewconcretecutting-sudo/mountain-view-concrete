@@ -8,10 +8,11 @@ import PostsManager from "@/components/admin/PostsManager";
 import CommentsTable from "@/components/admin/CommentsTable";
 import ServicesManager from "@/components/admin/ServicesManager";
 import EquipmentManager from "@/components/admin/EquipmentManager";
+import GalleryManager from "@/components/admin/GalleryManager";
 import ThemePanel from "@/components/admin/ThemePanel";
 import ChangePasswordPanel from "@/components/admin/ChangePasswordPanel";
 import { AlertTriangle } from "lucide-react";
-import type { Lead, Project, Testimonial, Post, Comment, Service, Equipment } from "@/lib/types";
+import type { Lead, Project, Testimonial, Post, Comment, Service, Equipment, GalleryImage } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,7 @@ export default async function AdminDashboardPage() {
     { data: comments, error: commentsError },
     { data: services, error: servicesError },
     { data: equipment, error: equipmentError },
+    { data: galleryImages, error: galleryError },
     themeSettings,
   ] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }),
@@ -48,6 +50,7 @@ export default async function AdminDashboardPage() {
     supabase.from("comments").select("*, posts(title, slug), projects(title)").order("created_at", { ascending: false }),
     supabase.from("services").select("*").order("display_order", { ascending: true }),
     supabase.from("equipment").select("*").order("display_order", { ascending: true }),
+    supabase.from("gallery_images").select("*").order("display_order", { ascending: true }),
     getThemeSettings(),
   ]);
 
@@ -59,6 +62,7 @@ export default async function AdminDashboardPage() {
   if (commentsError) console.error("[admin] comments query failed:", commentsError.message);
   if (servicesError) console.error("[admin] services query failed:", servicesError.message);
   if (equipmentError) console.error("[admin] equipment query failed:", equipmentError.message);
+  if (galleryError) console.error("[admin] gallery_images query failed:", galleryError.message);
 
   return (
     <div className="bg-aggregate min-h-screen py-12 text-chalk border-b-4 border-slurry/40">
@@ -91,6 +95,17 @@ export default async function AdminDashboardPage() {
             Site Theme
           </h2>
           <ThemePanel initialColors={themeSettings} />
+        </section>
+
+        <section className="mt-14">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-wider text-chalk font-bold border-b border-slurry/40 pb-2">
+            Homepage Photo Gallery Carousel
+          </h2>
+          {galleryError ? (
+            <SectionError label="Gallery Images" />
+          ) : (
+            <GalleryManager images={(galleryImages as GalleryImage[]) ?? []} />
+          )}
         </section>
 
         <section className="mt-14">
@@ -173,4 +188,3 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
-

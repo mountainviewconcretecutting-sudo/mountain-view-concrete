@@ -410,4 +410,90 @@ export async function deleteEquipment(equipmentId: string) {
   revalidatePath("/");
 }
 
+const upsertGalleryImageSchema = z.object({
+  id: z.string().optional(),
+  image_url: z.string().url("Must be a valid image URL."),
+  alt_text: z.string().optional(),
+  display_order: z.number().int().min(0, "Display order must be 0 or greater."),
+});
+
+export async function upsertGalleryImage(input: {
+  id?: string;
+  image_url: string;
+  alt_text?: string;
+  display_order: number;
+}): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  const parsed = upsertGalleryImageSchema.safeParse(input);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    return {
+      success: false,
+      message: issue ? issue.message : "Invalid gallery image input.",
+    };
+  }
+
+  const payload = {
+    image_url: parsed.data.image_url,
+    alt_text: parsed.data.alt_text || null,
+    display_order: parsed.data.display_order,
+  };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = input.id
+    ? await supabase.from("gallery_images").update(payload).eq("id", input.id)
+    : await supabase.from("gallery_images").insert(payload);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  return { success: true, message: "Gallery image saved." };
+}
+
+export async function deleteGalleryImage(id: string): Promise<void> {
+  if (!(await getIsAdmin())) throw new Error("Unauthorized: Admin access required.");
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("gallery_images").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
+export async function reorderGalleryImages(orderedIds: string[]): Promise<ActionResult> {
+  if (!(await getIsAdmin())) {
+    return { success: false, message: "Unauthorized: Admin access required." };
+  }
+
+  if (!orderedIds || orderedIds.length === 0) {
+    return { success: true, message: "No items to reorder." };
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  for (let index = 0; index < orderedIds.length; index++) {
+    const id = orderedIds[index];
+    const { error } = await supabase
+      .from("gallery_images")
+      .update({ display_order: index })
+      .eq("id", id);
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  return { success: true, message: "Gallery order updated." };
+}
+
+
 

@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import TrustBadges from "@/components/home/TrustBadges";
+import GalleryCarousel from "@/components/home/GalleryCarousel";
 import SectorOverview from "@/components/home/SectorOverview";
 import ServicesPreview from "@/components/home/ServicesPreview";
 import FeaturedProjectsPreview from "@/components/home/FeaturedProjectsPreview";
@@ -7,7 +8,7 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import CtaBand from "@/components/home/CtaBand";
 import { getSiteContents, getIsAdmin } from "@/lib/actions/siteContent";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Testimonial } from "@/lib/types";
+import type { Testimonial, GalleryImage } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +28,22 @@ async function getApprovedTestimonials(): Promise<Testimonial[]> {
   }
 }
 
+async function getGalleryImages(): Promise<GalleryImage[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("gallery_images")
+      .select("*")
+      .order("display_order", { ascending: true });
+    if (error) return [];
+    return (data as GalleryImage[]) ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const [content, isAdmin, testimonials] = await Promise.all([
+  const [content, isAdmin, testimonials, galleryImages] = await Promise.all([
     getSiteContents(
       [
         "hero_tagline",
@@ -62,6 +77,7 @@ export default async function HomePage() {
     ),
     getIsAdmin(),
     getApprovedTestimonials(),
+    getGalleryImages(),
   ]);
 
   return (
@@ -72,6 +88,7 @@ export default async function HomePage() {
         isAdmin={isAdmin}
       />
       <TrustBadges />
+      <GalleryCarousel images={galleryImages} />
       <SectorOverview isAdmin={isAdmin} content={content} />
       <ServicesPreview isAdmin={isAdmin} content={content} />
       <FeaturedProjectsPreview isAdmin={isAdmin} content={content} />

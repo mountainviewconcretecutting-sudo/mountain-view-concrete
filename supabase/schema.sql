@@ -452,3 +452,27 @@ create policy "Admin Delete Access on site-images"
   on storage.objects for delete
   using (bucket_id = 'site-images' and public.is_admin());
 
+-- ---------------------------------------------------------------------------
+-- gallery_images — Homepage Photo Wall Carousel
+-- ---------------------------------------------------------------------------
+create table if not exists gallery_images (
+  id uuid primary key default gen_random_uuid(),
+  image_url text not null,
+  alt_text text,
+  display_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists gallery_images_order_idx on gallery_images(display_order);
+
+alter table gallery_images enable row level security;
+
+create policy "public can read gallery images"
+  on gallery_images for select
+  using (true);
+
+create policy "admins can manage gallery images"
+  on gallery_images for all
+  using (is_admin())
+  with check (is_admin());
+
