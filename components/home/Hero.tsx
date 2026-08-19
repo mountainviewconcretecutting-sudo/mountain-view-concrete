@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Phone, FileText, ShieldCheck, Zap } from "lucide-react";
 import QuoteModal from "@/components/QuoteModal";
 import EditableText from "@/components/edit-mode/EditableText";
@@ -23,54 +24,69 @@ export default function Hero({
       {/* Background industrial Grid pattern */}
       <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#9BA3AF_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
-      <div className="container-page relative z-10">
-        <div className="inline-flex items-center gap-2 border border-slurry/50 bg-slurry/20 px-3 py-1 text-xs font-tech font-bold uppercase tracking-widest text-ochre mb-6">
-          <Zap size={14} className="text-flame" />
-          <span>{"// CALGARY & WESTERN ALBERTA . EST. 25+ YEARS"}</span>
+      <div className="container-page relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:justify-between">
+        {/* Left Column - Text and CTAs */}
+        <div className="lg:w-1/2">
+          <div className="inline-flex items-center gap-2 border border-slurry/50 bg-slurry/20 px-3 py-1 text-xs font-tech font-bold uppercase tracking-widest text-ochre mb-6">
+            <Zap size={14} className="text-flame" />
+            <span>{"// CALGARY & WESTERN ALBERTA . EST. 25+ YEARS"}</span>
+          </div>
+
+          <div className="max-w-4xl">
+            <EditableText
+              contentKey="hero_tagline"
+              initialValue={tagline}
+              isAdmin={isAdmin}
+              multiline={true}
+            />
+
+            <EditableText
+              contentKey="hero_subtext"
+              initialValue={subtext}
+              isAdmin={isAdmin}
+              multiline={true}
+            />
+          </div>
+
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <a
+              href="tel:8257341419"
+              className="btn-primary text-lg font-display tracking-wider sm:w-auto w-full justify-center"
+            >
+              <Phone size={20} aria-hidden="true" /> CALL NOW: 825-734-1419
+            </a>
+            <button
+              type="button"
+              onClick={() => setQuoteOpen(true)}
+              className="btn-secondary text-lg font-display tracking-wider sm:w-auto w-full justify-center"
+            >
+              <FileText size={20} aria-hidden="true" className="text-flame" /> REQUEST A QUOTE
+            </button>
+          </div>
+
+          <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-slurry/30 pt-6 text-xs font-tech uppercase tracking-wider text-steel-light">
+            <span className="flex items-center gap-1.5 text-ochre font-bold">
+              <ShieldCheck size={16} /> COR Safety Certified
+            </span>
+            <span className="text-slurry">|</span>
+            <span>WCB Alberta Compliant</span>
+            <span className="text-slurry">|</span>
+            <span>Fully Insured &amp; Bonded</span>
+            <span className="text-slurry">|</span>
+            <span className="text-flame font-bold">24/7 Emergency Service</span>
+          </div>
         </div>
 
-        <div className="max-w-4xl">
-          <EditableText
-            contentKey="hero_tagline"
-            initialValue={tagline}
-            isAdmin={isAdmin}
-            multiline={true}
+        {/* Right Column - Logo (Hidden on mobile) */}
+        <div className="hidden lg:flex lg:w-1/2 justify-center items-center">
+          <Image 
+            src="/images/main-logo.png" 
+            alt="Mountain View Concrete Cutting Inc. Logo" 
+            width={700} 
+            height={700} 
+            className="w-full max-w-[700px] h-auto object-contain drop-shadow-2xl"
+            priority
           />
-
-          <EditableText
-            contentKey="hero_subtext"
-            initialValue={subtext}
-            isAdmin={isAdmin}
-            multiline={true}
-          />
-        </div>
-
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-          <a
-            href="tel:8257341419"
-            className="btn-primary text-lg font-display tracking-wider sm:w-auto w-full justify-center"
-          >
-            <Phone size={20} aria-hidden="true" /> CALL NOW: 825-734-1419
-          </a>
-          <button
-            type="button"
-            onClick={() => setQuoteOpen(true)}
-            className="btn-secondary text-lg font-display tracking-wider sm:w-auto w-full justify-center"
-          >
-            <FileText size={20} aria-hidden="true" className="text-flame" /> REQUEST A QUOTE
-          </button>
-        </div>
-
-        <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-slurry/30 pt-6 text-xs font-tech uppercase tracking-wider text-steel-light">
-          <span className="flex items-center gap-1.5 text-ochre font-bold">
-            <ShieldCheck size={16} /> COR Safety Certified
-          </span>
-          <span className="text-slurry">|</span>
-          <span>WCB Alberta Compliant</span>
-          <span className="text-slurry">|</span>
-          <span>Fully Insured &amp; Bonded</span>
-          <span className="text-slurry">|</span>
-          <span className="text-flame font-bold">24/7 Emergency Service</span>
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, Phone, FileText } from "lucide-react";
 import QuoteModal from "@/components/QuoteModal";
 
@@ -21,14 +22,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b-2 border-slurry/50 bg-aggregate-deep/95 backdrop-blur-sm">
       <div className="container-page flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="flex items-center gap-2.5 shrink-0" onClick={() => setMenuOpen(false)}>
-          <div className="flex flex-col">
-            <span className="font-display text-2xl font-bold uppercase tracking-wider text-chalk md:text-3xl leading-none">
-              MOUNTAIN VIEW
-            </span>
-            <span className="font-tech text-[10px] uppercase tracking-[0.25em] text-flame font-bold">
-              CONCRETE CUTTING INC.
-            </span>
-          </div>
+          <Image alt="Mountain View Concrete Cutting Inc. Logo" className="h-10 w-auto md:h-12" height={60} priority src="/images/main-logo.png" width={240}/>
         </Link>
 
         <nav aria-label="Primary" className="hidden md:flex md:items-center md:gap-8">

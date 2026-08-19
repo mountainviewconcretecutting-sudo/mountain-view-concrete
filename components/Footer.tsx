@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
@@ -8,8 +9,9 @@ export default function Footer() {
     <footer className="border-t-4 border-slurry/60 bg-aggregate-deep text-steel-light">
       <div className="container-page grid grid-cols-1 gap-10 py-14 md:grid-cols-4">
         <div>
-          <p className="font-display text-2xl font-bold uppercase tracking-wider text-chalk">Mountain View</p>
-          <p className="font-tech text-xs uppercase tracking-[0.2em] text-flame font-bold">Concrete Cutting Inc.</p>
+          <Link href="/">
+            <Image alt="Mountain View Concrete Cutting Inc. Logo" className="h-10 w-auto md:h-12 mb-4" height={60} src="/images/main-logo.png" width={240}/>
+          </Link>
           <p className="mt-4 font-body text-sm leading-relaxed text-steel-light">
             Precision Cutting. Solid Results. 25+ years serving Calgary and Western Alberta.
           </p>
